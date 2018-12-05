@@ -1,0 +1,4 @@
+﻿<ViewExtensionDefinition>
+  <AssemblyPath>..\bin\DynamoHub.dll</AssemblyPath>
+  <TypeName>DynamoHub.MessAround</TypeName>
+</ViewExtensionDefinition>
