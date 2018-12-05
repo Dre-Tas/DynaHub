@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DynamoHub
 {
-    public class Class1
+    public class MessAround
     {
     }
 }

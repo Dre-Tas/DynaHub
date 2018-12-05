@@ -128,11 +128,43 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="MessAround.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="pkg.json" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!--Using AfterBuild Events to copy the extension to the Dynamo packages folder-->
+  <Target Name="AfterBuild">
+    <Message Importance="High" Text="++++++++++++++++++++++++++++++++++++++" />
+    <Message Importance="High" Text="Started building the Dynamo extension" />
+    <!--Defining folders to copy-->
+    <ItemGroup>
+      <SourceDlls Include="$(TargetDir)*.dll" />
+      <SourcePdbs Include="$(TargetDir)*.pdb" />
+      <SourcePkg Include="$(ProjectDir)pkg.json" />
+      <SourceExtension Include="$(TargetDir)*ExtensionDefinition.xml" />
+    </ItemGroup>
+    <!--Copying to Build Folder-->
+    <Copy SourceFiles="@(SourceDlls)" DestinationFolder="$(TargetDir)$(ProjectName)\bin\" />
+    <Copy SourceFiles="@(SourcePdbs)" DestinationFolder="$(TargetDir)$(ProjectName)\bin\" />
+    <Copy SourceFiles="@(SourcePkg)" DestinationFolder="$(TargetDir)$(ProjectName)" />
+    <Copy SourceFiles="@(SourceExtension)" DestinationFolder="$(TargetDir)\$(ProjectName)\extra" />
+    <Message Importance="High" Text="++++++++++++++++++++++++++++++++++++++" />
+    <Message Importance="High" Text="Built to $(TargetDir)\$(ProjectName)" />
+    <ItemGroup>
+      <SourcePackage Include="$(TargetDir)\$(ProjectName)\**\*" />
+    </ItemGroup>
+    <PropertyGroup>
+      <!--Copy to Dynamo sandbox for testing -->
+      <DeployFolder Condition="'$(Configuration)' == 'Debug'">$(AppData)\Dynamo\Dynamo Core\2.0\packages\$(ProjectName)</DeployFolder>
+      <!--Copy to Dynamo revit for publishing -->
+      <DeployFolder Condition="'$(Configuration)' == 'Release' Or '$(Configuration)' == 'DebugRevit'">$(AppData)\Dynamo\Dynamo Revit\2.0\packages\$(ProjectName)</DeployFolder>
+    </PropertyGroup>
+    <Copy SourceFiles="@(SourcePackage)" DestinationFolder="$(DeployFolder)\%(RecursiveDir)" />
+    <Message Importance="High" Text="++++++++++++++++++++++++++++++++++++++" />
+    <Message Importance="High" Text="Deployed to $(DeployFolder)" />
+  </Target>
 </Project>
