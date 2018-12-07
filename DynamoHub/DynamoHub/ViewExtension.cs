@@ -5,16 +5,8 @@ using System;
 using System.Net;
 using System.Windows;
 using System.Windows.Controls;
-
-using CSharp.GitHub;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-
-using System.Web.Mvc;
-using System.Web;
-using System.Web.Security;
-
-using DynamoHub;
 
 
 namespace DynamoHub
@@ -28,6 +20,7 @@ namespace DynamoHub
         public string Name => "DynamoHub View Extension";
 
         // Token generated in GitHub
+        // TODO: DON'T HARDCODE IT! Prompt user to insert
         private readonly string token = "192f2975ee9073ab52d80de574da4840ddab38ce";
         // create client
         readonly GitHubClient client = new GitHubClient(new ProductHeaderValue("DynamoHub"));
@@ -54,65 +47,63 @@ namespace DynamoHub
 
             var VM = vlp.DynamoWindow.DataContext as DynamoViewModel;
 
-
-
             pullMenuItem.Click += async (sender, args) =>
             {
                 // Authenticate through personal access token
                 client.Credentials = new Credentials(token);
 
-                var codeSearch = new SearchCodeRequest()
-                {
-                    Extension = ".dyn",
-                    Repos = new RepositoryCollection
-                    {
-                        "ridleyco/DynamoRepo"
-                    }
-                };
+                //var codeSearch = new SearchCodeRequest()
+                //{
+                //    Extension = ".dyn",
+                //    Repos = new RepositoryCollection
+                //    {
+                //        "ridleyco/DynamoRepo"
+                //    }
+                //};
 
-                var codeResult = await client.Search.SearchCode(codeSearch);
+                //var codeResult = await client.Search.SearchCode(codeSearch);
 
                 List<string> apis = new List<string>();
                 List<string> names = new List<string>();
 
-                foreach (var item in codeResult.Items)
+                //foreach (var item in codeResult.Items)
+                //{
+                //    apis.Add(item.Url);
+                //    names.Add(item.Name);
+                //    //MessageBox.Show(item.GitUrl);
+                //    //MessageBox.Show(item.HtmlUrl);
+                //    //MessageBox.Show(item.Url);
+                //}
+
+                // POC - get template from GitHub
+                var temp = await client.Repository.Content.GetAllContents(
+                    "ridleyco",
+                    "DynamoRepo",
+                    "templates/TheMightyDynamoTemplate.dyn");
+                // Extract name and uri
+                foreach (var item in temp)
                 {
-                    apis.Add(item.Url);
                     names.Add(item.Name);
-                    //MessageBox.Show(item.GitUrl);
-                    //MessageBox.Show(item.HtmlUrl);
-                    //MessageBox.Show(item.Url);
+                    apis.Add(item.DownloadUrl);
                 }
 
-                //var user = await client.Repository.Get("ridleyco", "DynamoRepo");
-                var user = await client.Repository.Content.GetAllContents("ridleyco", "DynamoRepo");
-
-                MessageBox.Show(user.ToString());
-                //IReadOnlyList<Repository> gitubUserRepos = await client.Repository.GetAllForUser(user.Login);
-
-                //var culo = await client.Repository.Content.GetReadme();
-
+                // Instantiate web client to download file
                 WebClient wc = new WebClient();
 
+                // POC - get first file's name and uri
                 string uri = apis[0];
-
-                //string uri = @"https://raw.githubusercontent.com/ridleyco/DynamoRepo/master/templates/TheMightyDynamoTemplate.dyn?token=192f2975ee9073ab52d80de574da4840ddab38ce";
-                //    //@"https://raw.githubusercontent.com/ridleyco/dummy/master/README.md";
-                //    //@"https://raw.githubusercontent.com/ridleyco/DynamoRepo/master/templates/TheMightyDynamoTemplate.dyn?token=AiWs51sNTE0q1XitLlu3m0q0HXBjUh6Pks5cEdAKwA%3D%3D";
-
+                // TODO: Change location of file - use Dynamo folders to be sure it exists
                 string folder = @"C:\temp\DynamoHub\";
                 string fName = folder + names[0];
 
-                //MessageBox.Show($"I'm downloading {uri} to {fName}");
-                //wc.DownloadFile(uri, fName);
-                //MessageBox.Show("Downloaded! Opening now...");
+                // Download file locally
+                MessageBox.Show($"I'm downloading {uri} to {fName}");
+                wc.DownloadFile(uri, fName);
+                MessageBox.Show("Downloaded! Opening now...");
 
-                //VM.OpenCommand.Execute(fName);
-                //MessageBox.Show("tadaaa");
-
-                //Task task = new Task(async () => await ListUserRepos(ghClient));
-                //task.Start();
-                //Console.ReadLine();
+                // Open downloaded file
+                VM.OpenCommand.Execute(fName);
+                MessageBox.Show("tadaaa");
             };
             extensionMenu.Items.Add(pullMenuItem);
             // finally, we need to add our menu to Dynamo
