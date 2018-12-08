@@ -149,7 +149,8 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\IndexViewModel.cs" />
+    <Compile Include="GitHubConnection.cs" />
+    <Compile Include="Helpers.cs" />
     <Compile Include="ViewExtension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -168,6 +169,9 @@
   <ItemGroup>
     <Content Include="App_Readme\Spring.Rest.txt" />
     <Content Include="App_Readme\Spring.Social.Core.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!--Using AfterBuild Events to copy the extension to the Dynamo packages folder-->

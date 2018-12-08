@@ -19,9 +19,6 @@ namespace DynamoHub
         public string UniqueId => "7E85F38F-0A19-4F24-9E18-96845764780Q";
         public string Name => "DynamoHub View Extension";
 
-        // Token generated in GitHub
-        // TODO: DON'T HARDCODE IT! Prompt user to insert
-        private readonly string token = "192f2975ee9073ab52d80de574da4840ddab38ce";
         // create client
         readonly GitHubClient client = new GitHubClient(new ProductHeaderValue("DynamoHub"));
 
@@ -50,7 +47,7 @@ namespace DynamoHub
             pullMenuItem.Click += async (sender, args) =>
             {
                 // Authenticate through personal access token
-                client.Credentials = new Credentials(token);
+                client.Credentials = new Credentials(GitHubConnection.token);
 
                 //var codeSearch = new SearchCodeRequest()
                 //{
@@ -76,6 +73,7 @@ namespace DynamoHub
                 //}
 
                 // POC - get template from GitHub
+                // TODO - exceptions
                 var temp = await client.Repository.Content.GetAllContents(
                     "ridleyco",
                     "DynamoRepo",
@@ -97,18 +95,18 @@ namespace DynamoHub
                 string fName = folder + names[0];
 
                 // Download file locally
-                MessageBox.Show($"I'm downloading {uri} to {fName}");
                 wc.DownloadFile(uri, fName);
-                MessageBox.Show("Downloaded! Opening now...");
+                AutoClosingMessageBox.Show("Downloaded! Opening now...", "Success!", 2000);
 
                 // Open downloaded file
-                VM.OpenCommand.Execute(fName);
+                //VM.OpenCommand.Execute(fName);
                 MessageBox.Show("tadaaa");
             };
             extensionMenu.Items.Add(pullMenuItem);
             // finally, we need to add our menu to Dynamo
             vlp.dynamoMenu.Items.Add(extensionMenu);
         }
+
 
 
         /// <summary>
