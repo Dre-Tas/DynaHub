@@ -40,7 +40,7 @@ namespace DynamoHub
             // let's now create a completely top-level new menu item
             var extensionMenu = new MenuItem { Header = "DynamoHub" };
             // and now we add a new sub-menu item that says hello when clicked
-            var pullMenuItem = new MenuItem { Header = "Pull Graph" };
+            var pullMenuItem = new MenuItem { Header = "Browse GitHub" };
 
             var VM = vlp.DynamoWindow.DataContext as DynamoViewModel;
 
@@ -49,65 +49,67 @@ namespace DynamoHub
                 // Authenticate through personal access token
                 client.Credentials = new Credentials(GitHubConnection.token);
 
-                //var codeSearch = new SearchCodeRequest()
-                //{
-                //    Extension = ".dyn",
-                //    Repos = new RepositoryCollection
-                //    {
-                //        "ridleyco/DynamoRepo"
-                //    }
-                //};
+                // Name of the repo
+                // TODO: put as user input
+                string repoName = "DynamoRepo";
 
-                //var codeResult = await client.Search.SearchCode(codeSearch);
+                // It only works with a simple repo structure (for now): repo > folders [NO SUBFOLDERS]
+                // Dictionary with both repo path and download_url
+                Dictionary<string, string> repoFiles = new Dictionary<string, string>();
+                // List for all folders in repo to be queried
+                List<string> repoFolders = new List<string>();
 
-                List<string> apis = new List<string>();
-                List<string> names = new List<string>();
+                // Get content from GitHub at highest/repo level
+                IReadOnlyList<RepositoryContent> repoLevel =
+                    await client.Repository.Content.GetAllContents(
+                        "ridleyco",
+                        repoName);
 
-                //foreach (var item in codeResult.Items)
-                //{
-                //    apis.Add(item.Url);
-                //    names.Add(item.Name);
-                //    //MessageBox.Show(item.GitUrl);
-                //    //MessageBox.Show(item.HtmlUrl);
-                //    //MessageBox.Show(item.Url);
-                //}
-
-                // POC - get template from GitHub
-                // TODO - exceptions
-                var temp = await client.Repository.Content.GetAllContents(
-                    "ridleyco",
-                    "DynamoRepo",
-                    "templates/TheMightyDynamoTemplate.dyn");
-                // Extract name and uri
-                foreach (var item in temp)
+                // Check if there are .dyn file in outer level of repo
+                // And store all folders
+                foreach (RepositoryContent r in repoLevel)
                 {
-                    names.Add(item.Name);
-                    apis.Add(item.DownloadUrl);
+                    if (r.Name.EndsWith(".dyn"))
+                    {
+                        repoFiles.Add(r.Path, r.DownloadUrl);
+                    }
+                    else if (r.Type == "dir")
+                    {
+                        repoFolders.Add(r.Path);
+                    }
                 }
 
-                // Instantiate web client to download file
-                WebClient wc = new WebClient();
+                // Check repo's subfolders
+                foreach (string f in repoFolders)
+                {
+                    IReadOnlyList<RepositoryContent> foldersLevel =
+                        await client.Repository.Content.GetAllContents(
+                            "ridleyco",
+                            repoName,
+                            f);
 
-                // POC - get first file's name and uri
-                string uri = apis[0];
-                // TODO: Change location of file - use Dynamo folders to be sure it exists
-                string folder = @"C:\temp\DynamoHub\";
-                string fName = folder + names[0];
+                    foreach (RepositoryContent s in foldersLevel)
+                    {
+                        if (s.Name.EndsWith(".dyn"))
+                        {
+                            repoFiles.Add(s.Path, s.DownloadUrl);
+                        }
+                    }
+                }
 
-                // Download file locally
-                wc.DownloadFile(uri, fName);
-                AutoClosingMessageBox.Show("Downloaded! Opening now...", "Success!", 2000);
+                // TODO - exceptions + all files
 
-                // Open downloaded file
-                //VM.OpenCommand.Execute(fName);
-                MessageBox.Show("tadaaa");
+                // Create data tree to represent repo structure
+                Views.Browser b = new Views.Browser(repoFiles);
+                b.ShowDialog();
+
+                // Open downloaded file - path received from Browser
+                VM.OpenCommand.Execute(Views.Browser.toOpen);
             };
             extensionMenu.Items.Add(pullMenuItem);
-            // finally, we need to add our menu to Dynamo
+            // Add menu to Dynamo
             vlp.dynamoMenu.Items.Add(extensionMenu);
         }
-
-
 
         /// <summary>
         /// Method that is called when the host Dynamo application is closed.
