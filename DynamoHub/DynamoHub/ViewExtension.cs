@@ -134,7 +134,7 @@ namespace DynaHub
         /// </summary>
         public void Shutdown()
         {
-            GlobalSettings.di.Delete(true);
+            GlobalSettings.DeleteTempFolder();
         }
 
         public void Dispose() { }

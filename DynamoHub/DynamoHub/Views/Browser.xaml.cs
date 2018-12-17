@@ -113,7 +113,7 @@ namespace DynaHub.Views
                 // Create temp directory
                 try
                 {
-                    tempFold = GlobalSettings.CreateFolder(tempFolderPath);
+                    tempFold = GlobalSettings.CreateTempFolder(tempFolderPath);
                 }
                 catch
                 {
