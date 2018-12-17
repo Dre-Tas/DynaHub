@@ -3,6 +3,7 @@
 
 # Credentials
 GitHubConnection.cs
+GlobalSettings.cs
 
 # User-specific files
 *.suo

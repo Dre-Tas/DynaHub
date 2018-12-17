@@ -1,19 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-
 
 namespace DynaHub.Views
 {
@@ -79,13 +73,8 @@ namespace DynaHub.Views
 
             // ... Determine type of SelectedItem.
             if (tree.SelectedItem is TreeViewItem)
-            {                
-                // ... Handle a TreeViewItem.
-                var item = tree.SelectedItem as TreeViewItem;
-                MessageBox.Show("You selected this folder: " +
-                    item.Header.ToString() +
-                    Environment.NewLine +
-                    "Please select a file in that folder to open it.");
+            {
+                // Do nothing
             }
 
             // Else if it's the child element
@@ -109,11 +98,32 @@ namespace DynaHub.Views
 
                 // Get file's uri from dictionary using path/key
                 string uri = allPaths[path];
-                // Define where to download gh file
-                // TODO: Change location of file - use Dynamo folders to be sure it exists
-                string folder = @"C:\temp\DynamoHub\";
+
+                // Define where to download GitHub file inside of Dynamo folders
+
+                // Get location of assembly / dll file
+                string assemblyFolder =
+                    Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                // Navigate up and create tempfolder
+                string tempFolderPath =
+                    Path.GetFullPath(Path.Combine(assemblyFolder, @"..\temp\"));
+
+                string tempFold;
+
+                // Create temp directory
+                try
+                {
+                    tempFold = GlobalSettings.CreateFolder(tempFolderPath);
+                }
+                catch
+                {
+                    MessageBox.Show("Something went wrong creating the temporary folder to store the graph.",
+                        "Error");
+                    return;
+                }
+
                 // Assemble download path
-                string fName = folder + tree.SelectedItem.ToString();
+                string fName = tempFold + tree.SelectedItem.ToString();
 
                 // Download file locally
                 try
@@ -131,7 +141,7 @@ namespace DynaHub.Views
                     return;
                 }
                 // Notify user but don't block process in case user doesn't close window
-                AutoClosingMessageBox.Show("Downloaded! Opening now...", "Success!", 2000);
+                AutoClosingMessageBox.Show("Downloaded (temporarily)! Opening now...", "Success!", 2000);
 
                 // Pass path to downloaded file to main Dynamo method
                 toOpen = fName;

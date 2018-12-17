@@ -47,7 +47,7 @@ namespace DynaHub
             pullMenuItem.Click += async (sender, args) =>
             {
                 // Authenticate through personal access token
-                client.Credentials = new Credentials(GitHubConnection.token);
+                client.Credentials = new Credentials(GlobalSettings.GHToken);
 
                 // Name of the repo
                 // TODO: put as user input
@@ -132,7 +132,10 @@ namespace DynaHub
         /// <summary>
         /// Method that is called when the host Dynamo application is closed.
         /// </summary>
-        public void Shutdown() { }
+        public void Shutdown()
+        {
+            GlobalSettings.di.Delete(true);
+        }
 
         public void Dispose() { }
 
