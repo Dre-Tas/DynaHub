@@ -162,10 +162,10 @@
     <None Include="pkg.json" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="DynamoHub_ExtensionDefinition.xml">
+    <None Include="DynaHub_ExtensionDefinition.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="DynamoHub_ViewExtensionDefinition.xml">
+    <None Include="DynaHub_ViewExtensionDefinition.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

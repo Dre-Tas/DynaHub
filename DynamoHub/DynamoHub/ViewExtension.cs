@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 
 
-namespace DynamoHub
+namespace DynaHub
 {
     /// <summary>
     /// Dynamo View Extension that can control both the Dynamo application and its UI (menus, view, canvas, nodes).
@@ -17,10 +17,10 @@ namespace DynamoHub
     public class ViewExtension : IViewExtension
     {
         public string UniqueId => "7E85F38F-0A19-4F24-9E18-96845764780Q";
-        public string Name => "DynamoHub View Extension";
+        public string Name => "DynaHub View Extension";
 
         // create client
-        readonly GitHubClient client = new GitHubClient(new ProductHeaderValue("DynamoHub"));
+        readonly GitHubClient client = new GitHubClient(new ProductHeaderValue("DynaHub"));
 
         /// <summary>
         /// Method that is called when Dynamo starts, but is not yet ready to be used.
@@ -38,7 +38,7 @@ namespace DynamoHub
         public void Loaded(ViewLoadedParams vlp)
         {
             // let's now create a completely top-level new menu item
-            var extensionMenu = new MenuItem { Header = "DynamoHub" };
+            var extensionMenu = new MenuItem { Header = "DynaHub" };
             // and now we add a new sub-menu item that says hello when clicked
             var pullMenuItem = new MenuItem { Header = "Browse GitHub" };
 

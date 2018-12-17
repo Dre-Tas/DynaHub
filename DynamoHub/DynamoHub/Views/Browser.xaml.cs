@@ -15,7 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 
-namespace DynamoHub.Views
+namespace DynaHub.Views
 {
     /// <summary>
     /// Interaction logic for Browser.xaml
@@ -111,7 +111,7 @@ namespace DynamoHub.Views
                 string uri = allPaths[path];
                 // Define where to download gh file
                 // TODO: Change location of file - use Dynamo folders to be sure it exists
-                string folder = @"C:\temp\DynamoHub\";
+                string folder = @"C:\temp\DynaHub\";
                 // Assemble download path
                 string fName = folder + tree.SelectedItem.ToString();
 

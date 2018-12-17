@@ -1,0 +1,4 @@
+﻿<ViewExtensionDefinition>
+  <AssemblyPath>..\bin\DynaHub.dll</AssemblyPath>
+  <TypeName>DynaHub.ViewExtension</TypeName>
+</ViewExtensionDefinition>
