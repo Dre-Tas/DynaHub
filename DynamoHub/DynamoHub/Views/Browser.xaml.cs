@@ -111,12 +111,26 @@ namespace DynaHub.Views
                 string uri = allPaths[path];
                 // Define where to download gh file
                 // TODO: Change location of file - use Dynamo folders to be sure it exists
-                string folder = @"C:\temp\DynaHub\";
+                string folder = @"C:\temp\DynamoHub\";
                 // Assemble download path
                 string fName = folder + tree.SelectedItem.ToString();
 
                 // Download file locally
-                wc.DownloadFile(uri, fName);
+                try
+                {
+                    wc.DownloadFile(uri, fName);
+                }
+                catch (WebException)
+                {
+                    MessageBox.Show("Sorry, I couldn't find that file.", "Web Exception");
+                    return;
+                }
+                catch
+                {
+                    MessageBox.Show("Ooops, something went wrong.", "Error");
+                    return;
+                }
+                // Notify user but don't block process in case user doesn't close window
                 AutoClosingMessageBox.Show("Downloaded! Opening now...", "Success!", 2000);
 
                 // Pass path to downloaded file to main Dynamo method

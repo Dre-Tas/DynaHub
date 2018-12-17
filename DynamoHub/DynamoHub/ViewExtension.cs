@@ -59,24 +59,42 @@ namespace DynaHub
                 // List for all folders in repo to be queried
                 List<string> repoFolders = new List<string>();
 
+                IReadOnlyList<RepositoryContent> repoLevel = null;
+
                 // Get content from GitHub at highest/repo level
-                IReadOnlyList<RepositoryContent> repoLevel =
-                    await client.Repository.Content.GetAllContents(
-                        "ridleyco",
-                        repoName);
+                try
+                {
+                    repoLevel =
+                        await client.Repository.Content.GetAllContents(
+                            "ridleyco",
+                            repoName);
+                }
+                catch
+                {
+                    MessageBox.Show("I couldn't retrieve the contents of the repo",
+                        "Error");
+                    return;
+                }
 
                 // Check if there are .dyn file in outer level of repo
                 // And store all folders
-                foreach (RepositoryContent r in repoLevel)
+                try
                 {
-                    if (r.Name.EndsWith(".dyn"))
+                    foreach (RepositoryContent r in repoLevel)
                     {
-                        repoFiles.Add(r.Path, r.DownloadUrl);
+                        if (r.Name.EndsWith(".dyn"))
+                        {
+                            repoFiles.Add(r.Path, r.DownloadUrl);
+                        }
+                        else if (r.Type == "dir")
+                        {
+                            repoFolders.Add(r.Path);
+                        }
                     }
-                    else if (r.Type == "dir")
-                    {
-                        repoFolders.Add(r.Path);
-                    }
+                }
+                catch (NullReferenceException)
+                {
+                    // Do nothing. Already managed in catch above
                 }
 
                 // Check repo's subfolders

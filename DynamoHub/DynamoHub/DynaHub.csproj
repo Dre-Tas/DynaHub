@@ -7,8 +7,8 @@
     <ProjectGuid>{DE492037-F400-47C7-BC2E-BCDFD8203B88}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DynamoHub</RootNamespace>
-    <AssemblyName>DynamoHub</AssemblyName>
+    <RootNamespace>DynaHub</RootNamespace>
+    <AssemblyName>DynaHub</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
