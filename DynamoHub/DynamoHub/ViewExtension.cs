@@ -40,11 +40,20 @@ namespace DynaHub
             // let's now create a completely top-level new menu item
             var extensionMenu = new MenuItem { Header = "DynaHub" };
             // and now we add a new sub-menu item that says hello when clicked
-            var pullMenuItem = new MenuItem { Header = "Browse GitHub" };
+            var loginMenuItem = new MenuItem { Header = "Login to GitHub" };
+            var browseMenuItem = new MenuItem { Header = "Browse GitHub" };
 
             var VM = vlp.DynamoWindow.DataContext as DynamoViewModel;
 
-            pullMenuItem.Click += async (sender, args) =>
+            loginMenuItem.Click += (sender, args) =>
+            {
+                // Create data tree to represent repo structure
+                Views.Login l = new Views.Login();
+                l.ShowDialog();
+
+            };
+            
+            browseMenuItem.Click += async (sender, args) =>
             {
                 // Authenticate through personal access token
                 client.Credentials = new Credentials(GlobalSettings.GHToken);
@@ -115,8 +124,6 @@ namespace DynaHub
                     }
                 }
 
-                // TODO - exceptions + all files
-
                 // Create data tree to represent repo structure
                 Views.Browser b = new Views.Browser(repoFiles);
                 b.ShowDialog();
@@ -124,9 +131,13 @@ namespace DynaHub
                 // Open downloaded file - path received from Browser
                 VM.OpenCommand.Execute(Views.Browser.toOpen);
             };
-            extensionMenu.Items.Add(pullMenuItem);
-            // Add menu to Dynamo
+
+
+            // Add main menu to Dynamo
             vlp.dynamoMenu.Items.Add(extensionMenu);
+            // Add sub-menus to main menu
+            extensionMenu.Items.Add(loginMenuItem);
+            extensionMenu.Items.Add(browseMenuItem);
         }
 
         /// <summary>

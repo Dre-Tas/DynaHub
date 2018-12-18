@@ -5,14 +5,14 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:DynaHub.Views"
              mc:Ignorable="d" Background="White"
-        Width="450" Height="600" Title="GitHub repo">
+        Width="450" Height="600" Title="GitHub repo" Icon="/DynaHub;component/Resources/DynaHubLogo_s.png">
     <Grid Margin="10">
         <Grid.RowDefinitions>
-            <RowDefinition Height="71"/>
             <RowDefinition Height="482"/>
+            <RowDefinition Height="71"/>
         </Grid.RowDefinitions>
         <TreeView
-            Grid.Row="1"
+            Grid.Row="0"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
             Loaded="TreeView_Loaded"
@@ -20,13 +20,13 @@
             BorderBrush="White" Grid.RowSpan="2">
         </TreeView>
         <Image
-            Grid.Row="0"
-            HorizontalAlignment="Left"
+            Grid.Row="1"
+            HorizontalAlignment="Center"
             Height="60"
             Margin="0,1,0,0"
             VerticalAlignment="Top"
-            Width="60"
-            Source="pack://application:,,,/DynaHub;component/Resources/github-logo.png"/>
+            Width="175"
+            Source="pack://application:,,,/DynaHub;component/Resources/DynaHubLogo.png"/>
 
     </Grid>
 </Window>

@@ -1,0 +1,55 @@
+﻿<Window x:Class="DynaHub.Views.Login"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:DynaHub.Views"
+             mc:Ignorable="d" 
+             Height="350" Width="400"
+             Icon="/DynaHub;component/Resources/DynaHubLogo_s.png"
+             Title="Login"
+             ResizeMode="NoResize">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.5*"/>
+            <RowDefinition Height="0.7*"/>
+            <RowDefinition Height="0.7*"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Image Grid.Row="0"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            Source="pack://application:,,,/DynaHub;component/Resources/DynaHubLogo.png"/>
+        <Label Grid.Row="1"
+            Content="GitHub user name:" HorizontalAlignment="Left" VerticalAlignment="Top"
+            FontWeight="Bold" Margin="5"/>
+        <TextBox Grid.Row="1"
+            HorizontalAlignment="Stretch" Height="30" Text="username"
+            VerticalAlignment="Bottom" Margin="5" FontStyle="Italic"
+            VerticalContentAlignment="Center"/>
+        <Label Grid.Row="2"
+            Content="GitHub repository name:" HorizontalAlignment="Left" VerticalAlignment="Top"
+            FontWeight="Bold" Margin="5"/>
+        <ComboBox Grid.Row="2"
+            HorizontalAlignment="Stretch" Margin="5" VerticalAlignment="Bottom"
+                  Height="30"/>
+        <StackPanel Grid.Row="3" VerticalAlignment="Stretch" Margin="5">
+            <Label 
+            Content="GitHub token:" HorizontalAlignment="Left" VerticalAlignment="Top"
+            FontWeight="Bold"/>
+            <TextBox
+                Height="30" Text="token" VerticalAlignment="Center"
+                HorizontalAlignment="Stretch" FontStyle="Italic" VerticalContentAlignment="Center"/>
+            <TextBlock
+                HorizontalAlignment="Stretch" Margin="5"
+                VerticalAlignment="Bottom" Height="40" TextWrapping="Wrap">
+                <Run Text="If you are unsure on what a token is or how to get one, please refer to"/>
+                <Hyperlink NavigateUri="https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/" RequestNavigate="Hyperlink_RequestNavigate">
+                    this link on GitHub
+                </Hyperlink>
+            </TextBlock>
+
+        </StackPanel>
+    </Grid>
+</Window>
