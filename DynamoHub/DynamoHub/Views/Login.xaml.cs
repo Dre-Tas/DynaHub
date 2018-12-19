@@ -21,6 +21,7 @@ namespace DynaHub.Views
     /// </summary>
     public partial class Login : Window
     {
+        // Store user inputs
         public Login()
         {
             InitializeComponent();
@@ -30,6 +31,60 @@ namespace DynaHub.Views
         {
             Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
             e.Handled = true;
+        }
+
+        private void field_GotFocus(object sender, RoutedEventArgs e)
+        {
+            // Get calling element
+            TextBox s = sender as TextBox;
+
+            // Set calling element to empty
+            s.Text = "";
+        }
+
+        private void field_LostFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox s = sender as TextBox;
+
+            // Set to initial value only if user didn't input any value
+            if (s.Text == "")
+            {
+                s.Text = s.Name;
+            }
+        }
+
+        private void pass_GotFocus(object sender, RoutedEventArgs e)
+        {
+            // Get calling element
+            PasswordBox p = sender as PasswordBox;
+
+            // Set calling element to empty
+            p.Password = "";
+        }
+
+        private void pass_LostFocus(object sender, RoutedEventArgs e)
+        {
+            PasswordBox p = sender as PasswordBox;
+
+            // Set to initial value only if user didn't input any value
+            if (p.Password == "")
+            {
+                p.Password = p.Name;
+            }
+        }
+
+
+        private void button_MouseUp(object sender, RoutedEventArgs e)
+        {
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            GlobalSettings.user = username.Text;
+            GlobalSettings.repo = reponame.Text;
+            GlobalSettings.tok = token.Password;
+
+            Close();
         }
     }
 }

@@ -52,84 +52,98 @@ namespace DynaHub
                 l.ShowDialog();
 
             };
-            
+
             browseMenuItem.Click += async (sender, args) =>
             {
-                // Authenticate through personal access token
-                client.Credentials = new Credentials(GlobalSettings.GHToken);
-
-                // Name of the repo
-                // TODO: put as user input
-                string repoName = "DynamoRepo";
-
-                // It only works with a simple repo structure (for now): repo > folders [NO SUBFOLDERS]
-                // Dictionary with both repo path and download_url
-                Dictionary<string, string> repoFiles = new Dictionary<string, string>();
-                // List for all folders in repo to be queried
-                List<string> repoFolders = new List<string>();
-
-                IReadOnlyList<RepositoryContent> repoLevel = null;
-
-                // Get content from GitHub at highest/repo level
-                try
+                if (GlobalSettings.user != "" && GlobalSettings.user != "username" && GlobalSettings.user != null &&
+                GlobalSettings.repo != "" && GlobalSettings.repo != "reponame" && GlobalSettings.repo != null &&
+                GlobalSettings.tok != "" && GlobalSettings.tok != "token" && GlobalSettings.tok != null)
                 {
-                    repoLevel =
-                        await client.Repository.Content.GetAllContents(
-                            "ridleyco",
-                            repoName);
-                }
-                catch
-                {
-                    MessageBox.Show("I couldn't retrieve the contents of the repo",
-                        "Error");
-                    return;
-                }
-
-                // Check if there are .dyn file in outer level of repo
-                // And store all folders
-                try
-                {
-                    foreach (RepositoryContent r in repoLevel)
+                    // Try to authenticate through personal access token
+                    try
                     {
-                        if (r.Name.EndsWith(".dyn"))
+                        client.Credentials = new Credentials(GlobalSettings.tok);
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("It seems like you've input the wrong token");
+                        return;
+                    }
+
+                    // It only works with a simple repo structure (for now): repo > folders [NO SUBFOLDERS]
+                    // Dictionary with both repo path and download_url
+                    Dictionary<string, string> repoFiles = new Dictionary<string, string>();
+                    // List for all folders in repo to be queried
+                    List<string> repoFolders = new List<string>();
+
+                    IReadOnlyList<RepositoryContent> repoLevel = null;
+
+                    // Get content from GitHub at highest/repo level
+                    try
+                    {
+                        repoLevel =
+                            await client.Repository.Content.GetAllContents(
+                                GlobalSettings.user,
+                                GlobalSettings.repo);
+                    }
+                    catch
+                    {
+                        MessageBox.Show("I couldn't retrieve the contents of the repo",
+                            "Error");
+                        return;
+                    }
+
+                    // Check if there are .dyn file in outer level of repo
+                    // And store all folders
+                    try
+                    {
+                        foreach (RepositoryContent r in repoLevel)
                         {
-                            repoFiles.Add(r.Path, r.DownloadUrl);
-                        }
-                        else if (r.Type == "dir")
-                        {
-                            repoFolders.Add(r.Path);
+                            if (r.Name.EndsWith(".dyn"))
+                            {
+                                repoFiles.Add(r.Path, r.DownloadUrl);
+                            }
+                            else if (r.Type == "dir")
+                            {
+                                repoFolders.Add(r.Path);
+                            }
                         }
                     }
-                }
-                catch (NullReferenceException)
-                {
-                    // Do nothing. Already managed in catch above
-                }
-
-                // Check repo's subfolders
-                foreach (string f in repoFolders)
-                {
-                    IReadOnlyList<RepositoryContent> foldersLevel =
-                        await client.Repository.Content.GetAllContents(
-                            "ridleyco",
-                            repoName,
-                            f);
-
-                    foreach (RepositoryContent s in foldersLevel)
+                    catch (NullReferenceException)
                     {
-                        if (s.Name.EndsWith(".dyn"))
+                        // Do nothing. Already managed in catch above
+                    }
+
+                    // Check repo's subfolders
+                    foreach (string f in repoFolders)
+                    {
+                        IReadOnlyList<RepositoryContent> foldersLevel =
+                            await client.Repository.Content.GetAllContents(
+                                GlobalSettings.user,
+                                GlobalSettings.repo,
+                                f);
+
+                        foreach (RepositoryContent s in foldersLevel)
                         {
-                            repoFiles.Add(s.Path, s.DownloadUrl);
+                            if (s.Name.EndsWith(".dyn"))
+                            {
+                                repoFiles.Add(s.Path, s.DownloadUrl);
+                            }
                         }
                     }
+
+                    // Create data tree to represent repo structure
+                    Views.Browser b = new Views.Browser(repoFiles);
+                    b.ShowDialog();
+
+                    // Open downloaded file - path received from Browser
+                    VM.OpenCommand.Execute(Views.Browser.toOpen);
+
                 }
-
-                // Create data tree to represent repo structure
-                Views.Browser b = new Views.Browser(repoFiles);
-                b.ShowDialog();
-
-                // Open downloaded file - path received from Browser
-                VM.OpenCommand.Execute(Views.Browser.toOpen);
+                else
+                {
+                    MessageBox.Show("You'll need to login before trying to access your files!");
+                }
             };
 
 
