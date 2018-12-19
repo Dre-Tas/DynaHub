@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Octokit;
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -78,12 +80,104 @@ namespace DynaHub.Views
         {
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        // GitHub client
+        readonly GitHubClient client = new GitHubClient(new ProductHeaderValue("DynaHub"));
+
+        // Dictionary with both repo path and download_url
+        public static Dictionary<string, string> repoFiles = new Dictionary<string, string>();
+
+        // Aknowledge if the user logged in
+        public static bool logged = false;
+
+        private async void Button_ClickAsync(object sender, RoutedEventArgs e)
         {
             GlobalSettings.user = username.Text;
             GlobalSettings.repo = reponame.Text;
             GlobalSettings.tok = token.Password;
 
+            // IMPORTANT: The gathering of the contents of the repo will be done in this method straight after logging in. 
+            // In this way the login will immediatly notify 
+
+            // It only works with a simple repo structure (for now): repo > folders [NO SUBFOLDERS]
+
+            // Try to authenticate through personal access token
+            try
+            {
+                client.Credentials = new Credentials(GlobalSettings.tok);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("It seems like you've input the wrong token",
+                    "Error",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+                return;
+            }
+
+            // List for all folders in repo to be queried
+            List<string> repoFolders = new List<string>();
+
+            IReadOnlyList<RepositoryContent> repoLevel = null;
+
+            // Get content from GitHub at highest/repo level
+            try
+            {
+                repoLevel =
+                    await client.Repository.Content.GetAllContents(
+                        GlobalSettings.user,
+                        GlobalSettings.repo);
+            }
+            catch
+            {
+                MessageBox.Show("I couldn't find anything with those credentials.",
+                    "Error",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+                return;
+            }
+
+            try
+            {
+                foreach (RepositoryContent r in repoLevel)
+                {
+                    if (r.Name.EndsWith(".dyn"))
+                    {
+                        repoFiles.Add(r.Path, r.DownloadUrl);
+                    }
+                    else if (r.Type == "dir")
+                    {
+                        repoFolders.Add(r.Path);
+                    }
+                }
+            }
+            catch (NullReferenceException)
+            {
+                // Do nothing. Already managed in catch above
+            }
+
+            // Check repo's subfolders
+            foreach (string f in repoFolders)
+            {
+                IReadOnlyList<RepositoryContent> foldersLevel =
+                    await client.Repository.Content.GetAllContents(
+                        GlobalSettings.user,
+                        GlobalSettings.repo,
+                        f);
+
+                foreach (RepositoryContent s in foldersLevel)
+                {
+                    if (s.Name.EndsWith(".dyn"))
+                    {
+                        repoFiles.Add(s.Path, s.DownloadUrl);
+                    }
+                }
+            }
+
+            // Notify user
+            AutoClosingMessageBox.Show("The login was successful.", "Success", 3000);
+            // If you go to this point, it was successful
+            logged = true;
+            // And close the log in form
             Close();
         }
     }

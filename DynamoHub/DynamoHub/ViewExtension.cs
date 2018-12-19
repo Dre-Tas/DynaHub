@@ -50,90 +50,14 @@ namespace DynaHub
                 // Create data tree to represent repo structure
                 Views.Login l = new Views.Login();
                 l.ShowDialog();
-
             };
 
-            browseMenuItem.Click += async (sender, args) =>
+            browseMenuItem.Click += (sender, args) =>
             {
-                if (GlobalSettings.user != "" && GlobalSettings.user != "username" && GlobalSettings.user != null &&
-                GlobalSettings.repo != "" && GlobalSettings.repo != "reponame" && GlobalSettings.repo != null &&
-                GlobalSettings.tok != "" && GlobalSettings.tok != "token" && GlobalSettings.tok != null)
+                if (Views.Login.logged)
                 {
-                    // Try to authenticate through personal access token
-                    try
-                    {
-                        client.Credentials = new Credentials(GlobalSettings.tok);
-                    }
-                    catch (Exception)
-                    {
-                        MessageBox.Show("It seems like you've input the wrong token");
-                        return;
-                    }
-
-                    // It only works with a simple repo structure (for now): repo > folders [NO SUBFOLDERS]
-                    // Dictionary with both repo path and download_url
-                    Dictionary<string, string> repoFiles = new Dictionary<string, string>();
-                    // List for all folders in repo to be queried
-                    List<string> repoFolders = new List<string>();
-
-                    IReadOnlyList<RepositoryContent> repoLevel = null;
-
-                    // Get content from GitHub at highest/repo level
-                    try
-                    {
-                        repoLevel =
-                            await client.Repository.Content.GetAllContents(
-                                GlobalSettings.user,
-                                GlobalSettings.repo);
-                    }
-                    catch
-                    {
-                        MessageBox.Show("I couldn't retrieve the contents of the repo",
-                            "Error");
-                        return;
-                    }
-
-                    // Check if there are .dyn file in outer level of repo
-                    // And store all folders
-                    try
-                    {
-                        foreach (RepositoryContent r in repoLevel)
-                        {
-                            if (r.Name.EndsWith(".dyn"))
-                            {
-                                repoFiles.Add(r.Path, r.DownloadUrl);
-                            }
-                            else if (r.Type == "dir")
-                            {
-                                repoFolders.Add(r.Path);
-                            }
-                        }
-                    }
-                    catch (NullReferenceException)
-                    {
-                        // Do nothing. Already managed in catch above
-                    }
-
-                    // Check repo's subfolders
-                    foreach (string f in repoFolders)
-                    {
-                        IReadOnlyList<RepositoryContent> foldersLevel =
-                            await client.Repository.Content.GetAllContents(
-                                GlobalSettings.user,
-                                GlobalSettings.repo,
-                                f);
-
-                        foreach (RepositoryContent s in foldersLevel)
-                        {
-                            if (s.Name.EndsWith(".dyn"))
-                            {
-                                repoFiles.Add(s.Path, s.DownloadUrl);
-                            }
-                        }
-                    }
-
                     // Create data tree to represent repo structure
-                    Views.Browser b = new Views.Browser(repoFiles);
+                    Views.Browser b = new Views.Browser(Views.Login.repoFiles);
                     b.ShowDialog();
 
                     // Open downloaded file - path received from Browser

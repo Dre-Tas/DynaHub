@@ -52,7 +52,7 @@
         <Button Grid.Row="3"
             Margin="20,10" VerticalAlignment="Center" HorizontalAlignment="Left"
             Height="20" Width="100"
-            IsDefault="True" Click="Button_Click">
+            IsDefault="True" Click="Button_ClickAsync">
             Login</Button>
         <Image Grid.Row="3"
             HorizontalAlignment="Right" VerticalAlignment="Top"
