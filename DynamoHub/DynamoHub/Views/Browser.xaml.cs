@@ -55,7 +55,7 @@ namespace DynaHub.Views
                 // Get files which path is the same of the header
                 foreach (var i in keysList.Where(x => x.StartsWith(h)))
                 {
-                    filesInFolder.Add(i.ToString().Split('/').Last());
+                    filesInFolder.Add(i.ToString().Split('/').Last()); 
                 }
 
                 // The itmes at the lower level are names of the files without the folder
