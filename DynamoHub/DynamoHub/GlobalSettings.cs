@@ -11,7 +11,7 @@ namespace DynaHub
 {
     class GlobalSettings
     {
-        // Store credentials
+        // Store login credentials
         public static string user = null;
         public static string repo = null;
         public static string tok = null;

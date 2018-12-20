@@ -3,7 +3,15 @@
 # DynaHub
 >DynaHub is a Dynamo extension that facilitates the **interaction between Dynamo and GitHub**.
 
-DynaHub is still in its **alpha version**. Childhood is the best age to experiment and start discovering who you are and where you want to go! So, don't expect too much and help me to grow.
+DynaHub is still in its **alpha version**. Childhood is the best age to experiment and start discovering who you are and where you want to go! So, don't expect too much and help me to grow.  
+This also means that it is in full testing phase and your contibution in that is highly appreciated.
+
+## Table of contents
+* [An Octocat plays Meccano](#an-octocat-plays-meccano)
+* [Talk techy to me](#talk-techy-to-me)
+* [Current limitations](#current-limitations)
+* [Future features](#future-features)
+* [How to install](#how-to-install)
 
 ## An Octocat plays Meccano
 At Ridley/Willow we thought it would have been smart to store all our Dynamo graphs in a centralised cloud-based safe place. Even better if it was possible to track changes to those graphs, thus avoiding unwanted modification. So, yeah, GitHub sounded like the prefect solution!
@@ -40,3 +48,10 @@ Nothing under this level will be picked up. For now.
 
 We are also happy to hear your suggestions / feature requests!  
 Please feel free to shoot an email to atassera@ridleyco.com or log an issue on the repository.
+
+## How to install
+There are two ways for installing DynaHub:  
+1. Build the solution and copy the folder to _%AppData%Roaming\Dynamo\Dynamo Core\2.0\packages_ to install for the Dynamo Sandbox (stand-alone version) or to _%AppData%Roaming\Dynamo\Dynamo Revit\2.0\packages_ to install for the Revit plugin;
+
+2. Open Dynamo (from Revit or the stand-alone Sandbox), go to the Dynamo Package Manager and look for _DynaHub_  
+![DynaHub PM](/imgs/PackageManager.png)
