@@ -99,21 +99,13 @@ namespace DynaHub.Views
                 // Get file's uri from dictionary using path/key
                 string uri = allPaths[path];
 
-                // Define where to download GitHub file inside of Dynamo folders
-
-                // Get location of assembly / dll file
-                string assemblyFolder =
-                    Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                // Navigate up and create tempfolder
-                string tempFolderPath =
-                    Path.GetFullPath(Path.Combine(assemblyFolder, @"..\temp\"));
 
                 string tempFold;
 
                 // Create temp directory
                 try
                 {
-                    tempFold = GlobalSettings.CreateTempFolder(tempFolderPath);
+                    tempFold = GlobalSettings.CreateTempFolder();
                 }
                 catch
                 {

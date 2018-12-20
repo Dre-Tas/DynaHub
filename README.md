@@ -12,10 +12,10 @@ Too bad this is the AEC and not everyone is familiar with git and GitHub. Also, 
 
 But, fear no more. Dynamo allows extensions now. So we came up with DynaHub, a way to be able to connect to your GitHub account and grab the graphs stored there, but **without leaving Dynamo**!
 
-At the moment, DynaHub enables you to login to your GitHub account  
+At the moment, DynaHub enables you to **login** to your GitHub account  
 ![DynaHub Login](/imgs/Login.gif)
 
-And then you can browse what's in your repo and open the online-stored graph  
+And then you can **browse** what's in your repo and **open** the online-stored graph  
 ![DynaHub Browse](/imgs/Browse.gif)
 
 ## Talk techy to me
@@ -28,6 +28,8 @@ And then you can browse what's in your repo and open the online-stored graph
 ## Current limitations
 (*) Right now DynaHub is unable to read complex repository structures. At the moment it will pick up all the elements that are at the repo's root level or one level below (folders)
 ![DynaHub Struc](/imgs/FoldStruct.png)
+
+Nothing under this level will be picked up. For now.
 
 ## Future features
 * Handle more complex repo structures
