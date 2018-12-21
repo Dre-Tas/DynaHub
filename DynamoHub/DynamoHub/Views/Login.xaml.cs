@@ -95,9 +95,6 @@ namespace DynaHub.Views
             GlobalSettings.repo = reponame.Text;
             GlobalSettings.tok = token.Password;
 
-            // IMPORTANT: The gathering of the contents of the repo will be done in this method straight after logging in. 
-            // In this way the login will immediatly notify 
-
             // It only works with a simple repo structure (for now): repo > folders [NO SUBFOLDERS]
 
             // Try to authenticate through personal access token
