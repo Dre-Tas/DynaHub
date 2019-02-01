@@ -12,9 +12,14 @@ namespace DynaHub
     class GlobalSettings
     {
         // Store login credentials
+        // if login with token
         public static string user = null;
         public static string repo = null;
         public static string tok = null;
+        // if login with GH account
+        public static string email = null;
+        public static string password = null;
+        public static string repoName = null;
 
         // Temp folder
         public static DirectoryInfo di = null;

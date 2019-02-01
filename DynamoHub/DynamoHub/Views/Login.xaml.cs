@@ -1,5 +1,4 @@
 ﻿using Octokit;
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -152,30 +151,181 @@ namespace DynaHub.Views
                 // Do nothing. Already managed in catch above
             }
 
-            // Check repo's subfolders
-            foreach (string f in repoFolders)
+            try
             {
-                IReadOnlyList<RepositoryContent> foldersLevel =
-                    await client.Repository.Content.GetAllContents(
-                        GlobalSettings.user,
-                        GlobalSettings.repo,
-                        f);
-
-                foreach (RepositoryContent s in foldersLevel)
+                // Check repo's subfolders
+                foreach (string f in repoFolders)
                 {
-                    if (s.Name.EndsWith(".dyn"))
+                    IReadOnlyList<RepositoryContent> foldersLevel =
+                        await client.Repository.Content.GetAllContents(
+                            GlobalSettings.user,
+                            GlobalSettings.repo,
+                            f);
+
+                    foreach (RepositoryContent s in foldersLevel)
                     {
-                        repoFiles.Add(s.Path, s.DownloadUrl);
+                        if (s.Name.EndsWith(".dyn"))
+                        {
+                            repoFiles.Add(s.Path, s.DownloadUrl);
+                        }
                     }
                 }
             }
-
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(),
+                    "Error",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
             // Notify user
             AutoClosingMessageBox.Show("The login was successful.", "Success", 3000);
             // If you go to this point, it was successful
             logged = true;
             // And close the log in form
             Close();
+        }
+
+        private async void GetRepos_ClickAsync(object sender, RoutedEventArgs e)
+        {
+            GlobalSettings.email = email.Text;
+            GlobalSettings.password = password.Password;
+
+            // Try to authenticate through personal access token
+            try
+            {
+                client.Credentials = new Credentials(
+                    GlobalSettings.email,
+                    GlobalSettings.password);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("It seems like you've input the wrong email or password",
+                    "Error",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+                return;
+            }
+
+            repoName.Text = "...retrieving repos";
+
+            try
+            {
+                User user = await client.User.Current();
+
+                var repos = await client.Repository.GetAllForCurrent();
+                foreach (var r in repos.ToList())
+                {
+                    repoName.Items.Add(r.FullName);
+                }
+            }
+            catch (Exception)
+            {
+                repoName.Text = "wrong credentials?";
+                return;
+            }
+            repoName.Text = "pick repo";
+        }
+
+        private async void EmailPassB_ClickAsync(object sender, RoutedEventArgs e)
+        {
+            GlobalSettings.email = email.Text;
+            GlobalSettings.password = password.Password;
+            GlobalSettings.repoName = repoName.Text;
+
+            // It only works with a simple repo structure (for now): repo > folders [NO SUBFOLDERS]
+
+            // Try to authenticate through GH credentials
+            try
+            {
+                client.Credentials = new Credentials(
+                    GlobalSettings.email,
+                    GlobalSettings.password);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("It seems like you've input the wrong email or password",
+                    "Error",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+                return;
+            }
+
+            // List for all folders in repo to be queried
+            List<string> repoFolders = new List<string>();
+
+            IReadOnlyList<RepositoryContent> repoLevel = null;
+
+            // Get content from GitHub at highest/repo level
+            try
+            {
+                repoLevel = await client.Repository.Content.GetAllContents(
+                            GlobalSettings.repoName.Split('/')[0],
+                            GlobalSettings.repoName.Split('/')[1]);
+            }
+            catch
+            {
+                MessageBox.Show("I couldn't find anything with those credentials.",
+                    "Error",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+                return;
+            }
+
+            try
+            {
+                foreach (RepositoryContent r in repoLevel)
+                {
+                    if (r.Name.EndsWith(".dyn"))
+                    {
+                        repoFiles.Add(r.Path, r.DownloadUrl);
+                    }
+                    else if (r.Type == "dir")
+                    {
+                        repoFolders.Add(r.Path);
+                    }
+                }
+            }
+            catch (NullReferenceException)
+            {
+                // Do nothing. Already managed in catch above
+            }
+
+            try
+            {
+                // Check repo's subfolders
+                foreach (string f in repoFolders)
+                {
+                    IReadOnlyList<RepositoryContent> foldersLevel =
+                        await client.Repository.Content.GetAllContents(
+                            GlobalSettings.repoName.Split('/')[0],
+                            GlobalSettings.repoName.Split('/')[1],
+                            f);
+
+                    foreach (RepositoryContent s in foldersLevel)
+                    {
+                        if (s.Name.EndsWith(".dyn"))
+                        {
+                            repoFiles.Add(s.Path, s.DownloadUrl);
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Something went wrong",
+                    "Error",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+                return;
+            }
+
+            // And close the log in form
+            Close();
+            // Notify user
+            AutoClosingMessageBox.Show("The login was successful.", "Success", 3000);
+            // If you go to this point, it was successful
+            logged = true;
         }
     }
 }
