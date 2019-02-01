@@ -50,7 +50,7 @@ namespace DynaHub
 
         public static void DeleteTempFolder()
         {
-            if (File.Exists(tempFolderPath))
+            if (Directory.Exists(tempFolderPath))
             {
                 try
                 {
