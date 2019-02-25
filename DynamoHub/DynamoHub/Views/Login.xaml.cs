@@ -80,13 +80,19 @@ namespace DynaHub.Views
         }
 
         // GitHub client
-        readonly GitHubClient client = new GitHubClient(new ProductHeaderValue("DynaHub"));
+        public static readonly GitHubClient client = new GitHubClient(new ProductHeaderValue("DynaHub"));
 
         // Dictionary with both repo path and download_url
         public static Dictionary<string, string> repoFiles = new Dictionary<string, string>();
 
         // Aknowledge if the user logged in
         public static bool logged = false;
+
+        // contents of the repo highest level
+        public static IReadOnlyList<RepositoryContent> repoLevel = null;
+
+        // List for all folders in repo to be queried
+        public static List<string> repoFolders = new List<string>();
 
         private async void Button_ClickAsync(object sender, RoutedEventArgs e)
         {
@@ -109,11 +115,6 @@ namespace DynaHub.Views
                     MessageBoxImage.Error);
                 return;
             }
-
-            // List for all folders in repo to be queried
-            List<string> repoFolders = new List<string>();
-
-            IReadOnlyList<RepositoryContent> repoLevel = null;
 
             // Get content from GitHub at highest/repo level
             try
@@ -250,11 +251,6 @@ namespace DynaHub.Views
                     MessageBoxImage.Error);
                 return;
             }
-
-            // List for all folders in repo to be queried
-            List<string> repoFolders = new List<string>();
-
-            IReadOnlyList<RepositoryContent> repoLevel = null;
 
             // Get content from GitHub at highest/repo level
             try

@@ -42,6 +42,7 @@ namespace DynaHub
             // and now we add a new sub-menu item that says hello when clicked
             var loginMenuItem = new MenuItem { Header = "Login to GitHub" };
             var browseMenuItem = new MenuItem { Header = "Browse GitHub" };
+            var packagesMenuItem = new MenuItem { Header = "Get packages" };
 
             var VM = vlp.DynamoWindow.DataContext as DynamoViewModel;
 
@@ -62,7 +63,6 @@ namespace DynaHub
 
                     // Open downloaded file - path received from Browser
                     VM.OpenCommand.Execute(Views.Browser.toOpen);
-
                 }
                 else
                 {
@@ -70,12 +70,25 @@ namespace DynaHub
                 }
             };
 
+            packagesMenuItem.Click += (sender, args) =>
+            {
+                if (Views.Login.logged)
+                {
+                    // Download packages to Dynamo's packages folder
+                    GlobalSettings.DownloadPackagesAsync();
+                }
+                else
+                {
+                    MessageBox.Show("You'll need to login before downloading the packages!");
+                }
+            };
 
             // Add main menu to Dynamo
             vlp.dynamoMenu.Items.Add(extensionMenu);
             // Add sub-menus to main menu
             extensionMenu.Items.Add(loginMenuItem);
             extensionMenu.Items.Add(browseMenuItem);
+            extensionMenu.Items.Add(packagesMenuItem);
         }
 
         /// <summary>
