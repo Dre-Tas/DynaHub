@@ -1,6 +1,4 @@
-﻿
-using DynaHub.ViewModels;
-using Octokit;
+﻿using DynaHub.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -24,12 +22,13 @@ namespace DynaHub.Views
     /// </summary>
     public partial class Login : Window
     {
-        // Store user inputs
+        // Initialize
         public Login()
         {
             InitializeComponent();
         }
 
+        #region UIFunct
         private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
         {
             Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
@@ -76,31 +75,13 @@ namespace DynaHub.Views
             }
         }
 
-
         private void button_MouseUp(object sender, RoutedEventArgs e)
         {
         }
-
-        //// GitHub client
-        //public static readonly GitHubClient client = new GitHubClient(new ProductHeaderValue("DynaHub"));
-
-        // Dictionary with both repo path and download_url
-        public static Dictionary<string, string> repoFiles = new Dictionary<string, string>();
-
-        // Aknowledge if the user logged in
-        public static bool logged = false;
-
-        // contents of the repo highest level
-        public static IReadOnlyList<RepositoryContent> repoLevel = null;
-
-        // List for all folders in repo to be queried
-        public static List<string> repoFolders = new List<string>();
-
-
+        #endregion
 
         // Store login credentials
         // if login with token
-        private static string user = null;
         private static string tok = null;
         // if login with GH account
         internal static string GHemail = null;
@@ -109,8 +90,9 @@ namespace DynaHub.Views
         private async void Button_ClickAsync(object sender, RoutedEventArgs e)
         {
             // Get user inputs
-            user = username.Text;
             tok = token.Password;
+
+            VerificationMessage();
 
             // Connect to GH
             await GitHubConnection.LoginAsync(tok);
@@ -184,7 +166,7 @@ namespace DynaHub.Views
             #endregion ThisShouldntBeHere
 
             // If you go to this point, it was successful
-            logged = true;
+            GlobalSettings.logged = true;
             // And close the log in form
             Close();
         }
@@ -235,6 +217,8 @@ namespace DynaHub.Views
             GHemail = email.Text;
             GHpassword = password.Password;
             //GlobalSettings.repoName = repoName.Text;
+
+            VerificationMessage();
 
             await GitHubConnection.LoginAsync(GHemail, GHpassword);
 
@@ -310,10 +294,17 @@ namespace DynaHub.Views
             #endregion
 
             // If you go to this point, it was successful
-            logged = true;
+            GlobalSettings.logged = true;
 
             // And close the log in form
             Close();
+        }
+
+        private void VerificationMessage()
+        {
+            AutoClosingMessageBox.Show("Verifying credentials...",
+                "Logging in",
+                3000);
         }
     }
 }

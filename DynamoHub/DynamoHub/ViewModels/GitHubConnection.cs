@@ -8,9 +8,10 @@ namespace DynaHub.ViewModels
     class GitHubConnection
     {
         // GitHub client
-        private static readonly GitHubClient client =
+        internal static readonly GitHubClient client =
             new GitHubClient(new ProductHeaderValue("DynaHub"));
-        
+
+
         internal static async Task LoginAsync(string GHtoken)
         {
             // Authenticate through personal access token

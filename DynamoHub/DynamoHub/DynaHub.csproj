@@ -148,6 +148,7 @@
     <Compile Include="Helpers.cs" />
     <Compile Include="ViewExtension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\BrowserEngine.cs" />
     <Compile Include="ViewModels\GitHubConnection.cs" />
     <Compile Include="Views\Browser.xaml.cs">
       <DependentUpon>Browser.xaml</DependentUpon>

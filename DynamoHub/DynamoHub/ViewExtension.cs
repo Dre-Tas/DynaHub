@@ -1,4 +1,5 @@
-﻿using Dynamo.ViewModels;
+﻿using DynaHub.ViewModels;
+using Dynamo.ViewModels;
 using Dynamo.Wpf.Extensions;
 using Octokit;
 using System;
@@ -48,17 +49,24 @@ namespace DynaHub
 
             loginMenuItem.Click += (sender, args) =>
             {
-                // Create data tree to represent repo structure
-                Views.Login l = new Views.Login();
-                l.ShowDialog();
+                if (!GlobalSettings.logged)
+                {
+                    // Create data tree to represent repo structure
+                    Views.Login l = new Views.Login();
+                    l.ShowDialog();
+                }
+                else
+                {
+                    Helpers.ErrorMessage("You are already logged in.");
+                }
             };
 
             browseMenuItem.Click += (sender, args) =>
             {
-                if (Views.Login.logged)
+                if (GlobalSettings.logged)
                 {
                     // Create data tree to represent repo structure
-                    Views.Browser b = new Views.Browser(Views.Login.repoFiles);
+                    Views.Browser b = new Views.Browser();
                     b.ShowDialog();
 
                     // Open downloaded file - path received from Browser
@@ -66,7 +74,7 @@ namespace DynaHub
                 }
                 else
                 {
-                    MessageBox.Show("You'll need to login before trying to access your files!");
+                    Helpers.ErrorMessage("You'll need to login before trying to access your files!");
                 }
             };
 
@@ -87,7 +95,7 @@ namespace DynaHub
             vlp.dynamoMenu.Items.Add(extensionMenu);
             // Add sub-menus to main menu
             extensionMenu.Items.Add(loginMenuItem);
-            //extensionMenu.Items.Add(browseMenuItem);
+            extensionMenu.Items.Add(browseMenuItem);
             //extensionMenu.Items.Add(packagesMenuItem);
         }
 

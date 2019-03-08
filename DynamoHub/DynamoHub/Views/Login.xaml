@@ -61,16 +61,6 @@
                 </Grid.RowDefinitions>
 
                 <StackPanel Grid.Row="0" VerticalAlignment="Stretch" Margin="5">
-                    <Label
-                        Content="GitHub user name:" HorizontalAlignment="Left" VerticalAlignment="Top"
-                        FontWeight="Bold" Margin="5,5,0,0"/>
-                    <TextBox Name="username" Text="username"
-                        HorizontalAlignment="Stretch" Height="30"
-                        VerticalAlignment="Bottom" Margin="5" FontStyle="Italic"
-                        VerticalContentAlignment="Center"
-                        GotFocus="field_GotFocus" LostFocus="field_LostFocus"/>
-                </StackPanel>
-                <StackPanel Grid.Row="1" VerticalAlignment="Stretch" Margin="5">
                     <Label 
                         Content="GitHub token:" HorizontalAlignment="Left" VerticalAlignment="Top"
                         FontWeight="Bold"  Margin="5,5,0,0"/>
@@ -79,6 +69,11 @@
                         VerticalAlignment="Bottom" Margin="5" FontStyle="Italic"
                         VerticalContentAlignment="Center"
                         GotFocus="pass_GotFocus" LostFocus="pass_LostFocus"/>
+                </StackPanel>
+                <StackPanel Grid.Row="1" VerticalAlignment="Stretch" Margin="5">
+                    <Label 
+                        Content="Important:" HorizontalAlignment="Left" VerticalAlignment="Top"
+                        FontWeight="Bold"  Margin="5,5,0,0"/>
                     <TextBlock HorizontalAlignment="Stretch" Margin="5"
                         VerticalAlignment="Bottom" Height="40" TextWrapping="Wrap">
                 <Run Text="If you are unsure on what a token is or how to get one, please refer to"/>

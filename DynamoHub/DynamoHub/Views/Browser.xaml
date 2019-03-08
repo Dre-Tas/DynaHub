@@ -6,27 +6,33 @@
              xmlns:local="clr-namespace:DynaHub.Views"
              mc:Ignorable="d" Background="White"
         Width="450" Height="600" Title="GitHub repo" Icon="/DynaHub;component/Resources/DynaHubLogo_s.png">
-    <Grid Margin="10">
+    <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="482"/>
-            <RowDefinition Height="71"/>
+            <RowDefinition Height="80"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <TreeView
+
+        <ComboBox 
             Grid.Row="0"
+            Name="selectRepos"
+            HorizontalAlignment="Left" VerticalAlignment="Bottom"
+            Width="150" Height="25" Margin="10"
+            PreviewMouseLeftButtonDown="PopulateComboAsync"
+            SelectionChanged="OnSelectedAsync"/>
+        <Image
+            Grid.Row="0"
+            HorizontalAlignment="Right" VerticalAlignment="Center"
+            Margin="5"
+            Source="pack://application:,,,/DynaHub;component/Resources/DynaHubLogo.png"/>
+
+        <TreeView
+            Grid.Row="1"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
             Loaded="TreeView_Loaded"
             MouseDoubleClick="TreeViewItem_OnItemSelected"
             BorderBrush="White" Grid.RowSpan="2">
+            <TreeViewItem Header="Select repository first"/>
         </TreeView>
-        <Image
-            Grid.Row="1"
-            HorizontalAlignment="Center"
-            Height="60"
-            Margin="0,1,0,0"
-            VerticalAlignment="Top"
-            Width="175"
-            Source="pack://application:,,,/DynaHub;component/Resources/DynaHubLogo.png"/>
-
     </Grid>
 </Window>

@@ -14,6 +14,9 @@ namespace DynaHub
 {
     class GlobalSettings
     {
+        // Aknowledge if the user logged in
+        internal static bool logged = false;
+
         // Temp folder
         public static DirectoryInfo di = null;
 
