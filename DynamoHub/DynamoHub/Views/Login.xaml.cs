@@ -79,8 +79,8 @@ namespace DynaHub.Views
         {
         }
 
-        // GitHub client
-        public static readonly GitHubClient client = new GitHubClient(new ProductHeaderValue("DynaHub"));
+        //// GitHub client
+        //public static readonly GitHubClient client = new GitHubClient(new ProductHeaderValue("DynaHub"));
 
         // Dictionary with both repo path and download_url
         public static Dictionary<string, string> repoFiles = new Dictionary<string, string>();

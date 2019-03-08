@@ -14,15 +14,15 @@ namespace DynaHub
 {
     class GlobalSettings
     {
-        // Store login credentials
-        // if login with token
-        public static string user = null;
-        public static string repo = null;
-        public static string tok = null;
-        // if login with GH account
-        public static string email = null;
-        public static string password = null;
-        public static string repoName = null;
+        //// Store login credentials
+        //// if login with token
+        //public static string user = null;
+        //public static string repo = null;
+        //public static string tok = null;
+        //// if login with GH account
+        //public static string email = null;
+        //public static string password = null;
+        //public static string repoName = null;
 
         // Temp folder
         public static DirectoryInfo di = null;
@@ -135,6 +135,9 @@ namespace DynaHub
                 {
                     MessageBox.Show(ex.Message, "Error while downloading");
                 }
+
+                // Notify user
+                AutoClosingMessageBox.Show("You now have all the right packages.", "Success", 3000);
             }
         }
 
