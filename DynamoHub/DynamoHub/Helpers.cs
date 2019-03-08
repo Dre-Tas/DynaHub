@@ -9,6 +9,19 @@ namespace DynaHub
 {
     class Helpers
     {
+        internal static void ErrorMessage(string message)
+        {
+            MessageBox.Show(message,
+                "Error",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
+        }
+
+        internal static void SuccessMessage(string message)
+        {
+            AutoClosingMessageBox.Show(message, "Success", 3000);
+        }
+
     }
 
     // From https://stackoverflow.com/questions/23692127/auto-close-message-box

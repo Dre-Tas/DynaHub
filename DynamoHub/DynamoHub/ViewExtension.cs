@@ -70,25 +70,25 @@ namespace DynaHub
                 }
             };
 
-            packagesMenuItem.Click += (sender, args) =>
-            {
-                if (Views.Login.logged)
-                {
-                    // Download packages to Dynamo's packages folder
-                    GlobalSettings.DownloadPackagesAsync();
-                }
-                else
-                {
-                    MessageBox.Show("You'll need to login before downloading the packages!");
-                }
-            };
+            //packagesMenuItem.Click += (sender, args) =>
+            //{
+            //    if (Views.Login.logged)
+            //    {
+            //        // Download packages to Dynamo's packages folder
+            //        GlobalSettings.DownloadPackagesAsync();
+            //    }
+            //    else
+            //    {
+            //        MessageBox.Show("You'll need to login before downloading the packages!");
+            //    }
+            //};
 
             // Add main menu to Dynamo
             vlp.dynamoMenu.Items.Add(extensionMenu);
             // Add sub-menus to main menu
             extensionMenu.Items.Add(loginMenuItem);
-            extensionMenu.Items.Add(browseMenuItem);
-            extensionMenu.Items.Add(packagesMenuItem);
+            //extensionMenu.Items.Add(browseMenuItem);
+            //extensionMenu.Items.Add(packagesMenuItem);
         }
 
         /// <summary>

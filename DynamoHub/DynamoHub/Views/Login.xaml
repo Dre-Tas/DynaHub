@@ -5,34 +5,30 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:DynaHub.Views"
              mc:Ignorable="d" 
-             Height="399" Width="400"
+             Height="350" Width="400"
              Icon="/DynaHub;component/Resources/DynaHubLogo_s.png"
              Title="Login"
              ResizeMode="NoResize">
 
-    <TabControl Grid.RowSpan="3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="5" Grid.Row="1">
+    <TabControl VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="5">
         <TabItem Header="Login with GitHub credentials">
             <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="77*"/>
-                    <ColumnDefinition Width="298*"/>
-                </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="0.7*"/>
-                    <RowDefinition Height="0.7*"/>
-                    <RowDefinition Height="0.7*"/>
-                    <RowDefinition Height="60"/>
+                    <RowDefinition Height="80"/>
+                    <RowDefinition Height="110"/>
+                    <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-
-                <Label Grid.Row="0"
+                <StackPanel Grid.Row="0" VerticalAlignment="Stretch" Margin="5">
+                    <Label Grid.Row="0"
                     Content="Email address:" HorizontalAlignment="Left" VerticalAlignment="Top"
                     FontWeight="Bold" Margin="5,5,0,0" Grid.ColumnSpan="2"/>
-                <TextBox Grid.Row="0" Name="email" Text="email address"
+                    <TextBox Grid.Row="0" Name="email" Text="email address"
                     HorizontalAlignment="Stretch" Height="30"
                     VerticalAlignment="Center" Margin="5" FontStyle="Italic"
                     VerticalContentAlignment="Center"
                     GotFocus="field_GotFocus" LostFocus="field_LostFocus" Grid.ColumnSpan="2"/>
-                <StackPanel Grid.Row="1" VerticalAlignment="Stretch" Margin="5" Grid.ColumnSpan="2">
+                </StackPanel>
+                <StackPanel Grid.Row="1" VerticalAlignment="Stretch" Margin="5">
                     <Label 
                         Content="Password:" HorizontalAlignment="Left" VerticalAlignment="Top"
                         FontWeight="Bold"/>
@@ -45,86 +41,71 @@
                         VerticalAlignment="Bottom" Height="40" TextWrapping="Wrap">
                     </TextBlock>
                 </StackPanel>
-                <Label Grid.Row="2"
-                    Content="Repositories:" HorizontalAlignment="Left" VerticalAlignment="Top"
-                    FontWeight="Bold" Margin="5,5,0,0" Grid.ColumnSpan="2"/>
-                <ComboBox Grid.Row="2" Grid.ColumnSpan="2"
-                    Name="repoName" Text="'Get repos' first" IsEditable="True"
-                    HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5" Width="160"/>
-                <Button Name="GetRepos" Grid.Column="1" Grid.Row="2"
-                    Height="20" Width="80" HorizontalAlignment="Center" VerticalAlignment="Center"
-                    IsDefault="True" Click="GetRepos_ClickAsync" >
-                    Get repos</Button>
-
-                <Button Grid.Row="3" Name="EmailPass"
-                    Margin="20,14,0,14" VerticalAlignment="Center" HorizontalAlignment="Left"
-                    Height="20" Width="100"
-                    IsDefault="True" Click="EmailPassB_ClickAsync" Grid.ColumnSpan="2">
-                    Login</Button>
-                <Image Grid.Row="3" Grid.Column="1"
-                    HorizontalAlignment="Right" VerticalAlignment="Top"
-                    Source="pack://application:,,,/DynaHub;component/Resources/DynaHubLogo.png"
-                    Margin="0,2,20,0"/>
-
+                <StackPanel Orientation="Horizontal" Grid.Row="2">
+                    <Button 
+                        Margin="10" VerticalAlignment="Center"
+                        Height="20" Width="100"
+                        IsDefault="True" Click="EmailPassB_ClickAsync" Grid.ColumnSpan="2">
+                        Login</Button>
+                    <Image
+                        Source="pack://application:,,,/DynaHub;component/Resources/DynaHubLogo.png"
+                        Margin="40,10,10,10"/>
+                </StackPanel>
             </Grid>
         </TabItem>
 
         <TabItem Header="Login with token">
             <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="77*"/>
-                    <ColumnDefinition Width="298*"/>
-                </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="0.7*"/>
-                    <RowDefinition Height="0.7*"/>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="60"/>
+                    <RowDefinition Height="80"/>
+                    <RowDefinition Height="110"/>
+                    <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <Label Grid.Row="0"
-            Content="GitHub user name:" HorizontalAlignment="Left" VerticalAlignment="Top"
-            FontWeight="Bold" Margin="5,5,0,0" Grid.ColumnSpan="2"/>
-                <TextBox Grid.Row="0" Name="username" Text="username"
-            HorizontalAlignment="Stretch" Height="30"
-            VerticalAlignment="Bottom" Margin="5,0,5,10" FontStyle="Italic"
-            VerticalContentAlignment="Center"
-            GotFocus="field_GotFocus" LostFocus="field_LostFocus" Grid.ColumnSpan="2"/>
-                <Label Grid.Row="1"
-            Content="GitHub repository name:" HorizontalAlignment="Left" VerticalAlignment="Top"
-            FontWeight="Bold" Margin="5,5,0,0" Grid.ColumnSpan="2"/>
-                <TextBox Grid.Row="1" Name="reponame" Text="reponame"
-            HorizontalAlignment="Stretch" Margin="5,0,5,10" VerticalAlignment="Bottom"
-            VerticalContentAlignment="Center" Height="30"
-            GotFocus="field_GotFocus" LostFocus="field_LostFocus" Grid.ColumnSpan="2"/>
-                <StackPanel Grid.Row="2" VerticalAlignment="Stretch" Margin="5" Grid.ColumnSpan="2">
+                <StackPanel Grid.Row="0" VerticalAlignment="Stretch" Margin="5">
+                    <Label Grid.Row="0"
+                        Content="GitHub user name:" HorizontalAlignment="Left" VerticalAlignment="Top"
+                        FontWeight="Bold" Margin="5,5,0,0" Grid.ColumnSpan="2"/>
+                    <TextBox Grid.Row="0" Name="username" Text="username"
+                        HorizontalAlignment="Stretch" Height="30"
+                        VerticalAlignment="Bottom" Margin="5,0,5,10" FontStyle="Italic"
+                        VerticalContentAlignment="Center"
+                        GotFocus="field_GotFocus" LostFocus="field_LostFocus" Grid.ColumnSpan="2"/>
+                </StackPanel>
+                <StackPanel Grid.Row="1" VerticalAlignment="Stretch" Margin="5">
                     <Label 
-            Content="GitHub token:" HorizontalAlignment="Left" VerticalAlignment="Top"
-            FontWeight="Bold"/>
+                        Content="GitHub token:" HorizontalAlignment="Left" VerticalAlignment="Top"
+                        FontWeight="Bold"/>
                     <PasswordBox Name="token" Password="token"
-                Height="30" VerticalAlignment="Center"
-                HorizontalAlignment="Stretch" FontStyle="Italic" VerticalContentAlignment="Center"
-                GotFocus="pass_GotFocus" LostFocus="pass_LostFocus"/>
-                    <TextBlock
-                HorizontalAlignment="Stretch" Margin="5"
-                VerticalAlignment="Bottom" Height="40" TextWrapping="Wrap">
+                        Height="30" VerticalAlignment="Center"
+                        HorizontalAlignment="Stretch" FontStyle="Italic" VerticalContentAlignment="Center"
+                        GotFocus="pass_GotFocus" LostFocus="pass_LostFocus"/>
+                    <TextBlock HorizontalAlignment="Stretch" Margin="5"
+                        VerticalAlignment="Bottom" Height="40" TextWrapping="Wrap">
                 <Run Text="If you are unsure on what a token is or how to get one, please refer to"/>
                 <Hyperlink NavigateUri="https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/" RequestNavigate="Hyperlink_RequestNavigate">
                     this page on GitHub
                 </Hyperlink>
                     </TextBlock>
                 </StackPanel>
-                <Button Grid.Row="3"
-            Margin="20,14,0,14" VerticalAlignment="Center" HorizontalAlignment="Left"
-            Height="20" Width="100"
-            IsDefault="True" Click="Button_ClickAsync" Grid.ColumnSpan="2">
-                    Login</Button>
-                <Image Grid.Row="3"
-            HorizontalAlignment="Right" VerticalAlignment="Top"
-            Source="pack://application:,,,/DynaHub;component/Resources/DynaHubLogo.png"
-            Margin="0,2,20,0" Grid.Column="1"/>
+                <StackPanel Orientation="Horizontal" Grid.Row="2">
+                    <Button 
+                        Margin="10" VerticalAlignment="Center"
+                        Height="20" Width="100"
+                        IsDefault="True" Click="Button_ClickAsync" Grid.ColumnSpan="2">
+                        Login</Button>
+                    <Image
+                        Source="pack://application:,,,/DynaHub;component/Resources/DynaHubLogo.png"
+                        Margin="40,10,10,10"/>
+                </StackPanel>
             </Grid>
         </TabItem>
+
+        <Image Grid.Row="3" Grid.Column="1"
+                    HorizontalAlignment="Right" VerticalAlignment="Top"
+                    Source="pack://application:,,,/DynaHub;component/Resources/DynaHubLogo.png"
+                    Margin="0,2,20,0"/>
+
     </TabControl>
 
 </Window>
