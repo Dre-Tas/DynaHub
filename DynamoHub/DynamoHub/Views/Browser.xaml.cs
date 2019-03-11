@@ -1,6 +1,7 @@
 ﻿using DynaHub.ViewModels;
 using Octokit;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -23,97 +24,69 @@ namespace DynaHub.Views
         // Create variable to pass to main Dynamo method
         public static string toOpen = null;
 
+        private bool alreadyLoaded = false;
+
         public Browser()
         {
             InitializeComponent();
 
-            selectRepos.IsEditable = true;
-            selectRepos.IsReadOnly = true;
-            selectRepos.Text = "select a repository";
-
-
-            // Get dict from main dynamo method
-            //allPaths = files;
+            selectReposCB.IsEditable = true;
+            selectReposCB.IsReadOnly = true;
+            selectReposCB.Text = "select a repository";
         }
 
         private List<Repository> reposList = new List<Repository>();
 
         private async void PopulateComboAsync(object sender, RoutedEventArgs e)
         {
-            // Start async process straight away
-            Task<IReadOnlyList<Repository>> repos = BrowserEngine.GetUserReposAsync();
-
-            // Display in-the-meantime text
-            selectRepos.Text = "...retrieving repos";
-
-            // Wait to get the repos
-            IReadOnlyList<Repository> repositories = await repos;
-
-            // Populate combobox
-            foreach (Repository r in repositories)
+            // Only loads the list of repos the first time. Save calculations
+            if (!alreadyLoaded)
             {
-                selectRepos.Items.Add(r.FullName);
-                reposList.Add(r);
+                // Start async process straight away
+                Task<IReadOnlyList<Repository>> repos = BrowserEngine.GetUserReposAsync();
+
+                // Display in-the-meantime text
+                selectReposCB.Text = "...retrieving repos";
+
+                // Wait to get the repos
+                IReadOnlyList<Repository> repositories = await repos;
+
+                // Populate combobox
+                foreach (Repository r in repositories)
+                {
+                    selectReposCB.Items.Add(r.FullName);
+                    reposList.Add(r);
+                }
+                alreadyLoaded = true;
             }
         }
 
         // Initialise selection variable
         internal static Repository selectedRepo;
 
-        private async void OnSelectedAsync(object sender, RoutedEventArgs e)
+        private async void OnSelectedAsync(object sender, SelectionChangedEventArgs e)
         {
+            string selectionString = null;
+            selectionString = selectReposCB.SelectedItem.ToString();
+
             // Show text in combobox
-            selectRepos.Text = selectRepos.SelectedItem.ToString();
+            selectReposCB.Text = selectionString;
 
             // Get repository object from user selection
-            // -It's supposed that the user has only one repo with that path (GH rule)-
-            selectedRepo = reposList.Where(r => r.FullName == selectRepos.SelectedItem.ToString()).First();
+            // It's supposed that the user has only one repo with that path (GH rule)
+            selectedRepo = reposList.Where(r => r.FullName == selectionString).First();
 
-            //var temp = await BrowserEngine.GetRepoContentAsync();
+            // Initialize process to get repo's content
+            Task<SortedDictionary<string, string>> repoContentTask = null;
+            repoContentTask = BrowserEngine.GetRepoContentAsync(selectedRepo);
 
-            //foreach (var t in temp)
-            //{
-            //    MessageBox.Show(t.Name);
-            //}
-        }
+            // Get async result
+            SortedDictionary<string, string> repoContent = await repoContentTask;
 
-        // General functioning from here: https://www.dotnetperls.com/treeview-wpf
-        private void TreeView_Loaded(object sender, RoutedEventArgs e)
-        {
-            //// Sort alphabetically paths of dynamo files
-            //List<string> keysList = allPaths.Keys.ToList();
-            //keysList.Sort();
+            BrowserEngine.PopulateTree(repoContent, filesTree);
 
-            //// Get unique folders to define headers of treeview
-            //HashSet<string> headers = new HashSet<string>();
-            //foreach (string p in keysList)
-            //{
-            //    headers.Add(p.Split('/').First());
-            //}
-
-            //// Loop all files in folders and build treeview
-            //foreach (string h in headers)
-            //{
-            //    // Create headers
-            //    TreeViewItem tvItem = new TreeViewItem();
-            //    tvItem.Header = h;
-
-            //    // List to store all files in each folder
-            //    List<string> filesInFolder = new List<string>();
-
-            //    // Get files which path is the same of the header
-            //    foreach (var i in keysList.Where(x => x.StartsWith(h)))
-            //    {
-            //        filesInFolder.Add(i.ToString().Split('/').Last());
-            //    }
-
-            //    // The itmes at the lower level are names of the files without the folder
-            //    tvItem.ItemsSource = filesInFolder;
-
-            //    // Add them to the treeview
-            //    var tree = sender as TreeView;
-            //    tree.Items.Add(tvItem);
-            //}
+            // Clear lists not to repeat if user changes selection
+            ClearPrevious();
         }
 
         private void TreeViewItem_OnItemSelected(object sender, RoutedEventArgs e)
@@ -189,6 +162,14 @@ namespace DynaHub.Views
             //    // And close window
             //    Close();
             //}
+        }
+
+
+        private void ClearPrevious()
+        {
+            BrowserEngine.repoLevel.Clear();
+            BrowserEngine.repoFolders.Clear();
+            BrowserEngine.repoFiles.Clear();
         }
     }
 }

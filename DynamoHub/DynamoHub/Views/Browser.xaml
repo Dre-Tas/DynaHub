@@ -14,7 +14,7 @@
 
         <ComboBox 
             Grid.Row="0"
-            Name="selectRepos"
+            Name="selectReposCB"
             HorizontalAlignment="Left" VerticalAlignment="Bottom"
             Width="150" Height="25" Margin="10"
             PreviewMouseLeftButtonDown="PopulateComboAsync"
@@ -26,13 +26,15 @@
             Source="pack://application:,,,/DynaHub;component/Resources/DynaHubLogo.png"/>
 
         <TreeView
-            Grid.Row="1"
+            Grid.Row="1" Name="filesTree"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
-            Loaded="TreeView_Loaded"
-            MouseDoubleClick="TreeViewItem_OnItemSelected"
-            BorderBrush="White" Grid.RowSpan="2">
+            BorderBrush="White" Grid.RowSpan="2"
+            MouseDoubleClick="TreeViewItem_OnItemSelected">
             <TreeViewItem Header="Select repository first"/>
         </TreeView>
     </Grid>
 </Window>
+
+<!--MouseDoubleClick="TreeViewItem_OnItemSelected"-->
+
