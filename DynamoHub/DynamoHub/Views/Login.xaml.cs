@@ -1,19 +1,10 @@
 ﻿using DynaHub.ViewModels;
-using System;
-using System.Collections.Generic;
+using Octokit;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace DynaHub.Views
 {
@@ -92,81 +83,24 @@ namespace DynaHub.Views
             // Get user inputs
             tok = token.Password;
 
-            VerificationMessage();
+            // Start async to get user
+            Task<User> getUser = GitHubConnection.LoginAsync(tok);
 
-            // Connect to GH
-            await GitHubConnection.LoginAsync(tok);
+            // Pop up splash screen in the meantime
+            SplashWindow splash = new SplashWindow();
 
-            #region ThisShouldntBeHere
-            //// Get content from GitHub at highest/repo level
-            //try
-            //{
-            //    repoLevel =
-            //        await client.Repository.Content.GetAllContents(
-            //            GlobalSettings.user,
-            //            GlobalSettings.repo);
-            //}
-            //catch
-            //{
-            //    MessageBox.Show("I couldn't find anything with those credentials.",
-            //        "Error",
-            //        MessageBoxButton.OK,
-            //        MessageBoxImage.Error);
-            //    return;
-            //}
+            // Await for user
+            User user = await getUser;
 
-            //try
-            //{
-            //    foreach (RepositoryContent r in repoLevel)
-            //    {
-            //        if (r.Name.EndsWith(".dyn"))
-            //        {
-            //            repoFiles.Add(r.Path, r.DownloadUrl);
-            //        }
-            //        else if (r.Type == "dir")
-            //        {
-            //            repoFolders.Add(r.Path);
-            //        }
-            //    }
-            //}
-            //catch (NullReferenceException)
-            //{
-            //    // Do nothing. Already managed in catch above
-            //}
+            // Close splash screen
+            splash.CloseSplash();
 
-            //try
-            //{
-            //    // Check repo's subfolders
-            //    foreach (string f in repoFolders)
-            //    {
-            //        IReadOnlyList<RepositoryContent> foldersLevel =
-            //            await client.Repository.Content.GetAllContents(
-            //                GlobalSettings.user,
-            //                GlobalSettings.repo,
-            //                f);
-
-            //        foreach (RepositoryContent s in foldersLevel)
-            //        {
-            //            if (s.Name.EndsWith(".dyn"))
-            //            {
-            //                repoFiles.Add(s.Path, s.DownloadUrl);
-            //            }
-            //        }
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show(ex.ToString(),
-            //        "Error",
-            //        MessageBoxButton.OK,
-            //        MessageBoxImage.Error);
-            //}
-            //// Notify user
-            //AutoClosingMessageBox.Show("The login was successful.", "Success", 3000);
-            #endregion ThisShouldntBeHere
+            // Greet user
+            GitHubConnection.GreetUser(user);
 
             // If you go to this point, it was successful
             GlobalSettings.logged = true;
+
             // And close the log in form
             Close();
         }
@@ -216,95 +150,27 @@ namespace DynaHub.Views
         {
             GHemail = email.Text;
             GHpassword = password.Password;
-            //GlobalSettings.repoName = repoName.Text;
 
-            VerificationMessage();
+            // Start async to get user
+            Task<User> getUser = GitHubConnection.LoginAsync(GHemail, GHpassword);
 
-            await GitHubConnection.LoginAsync(GHemail, GHpassword);
+            // Pop up splash screen in the meantime
+            SplashWindow splash = new SplashWindow();
 
-            #region ThisShouldntBeHere
-            //// Get content from GitHub at highest/repo level
-            //try
-            //{
-            //    repoLevel = await client.Repository.Content.GetAllContents(
-            //                GlobalSettings.repoName.Split('/')[0],
-            //                GlobalSettings.repoName.Split('/')[1]);
-            //}
-            //catch
-            //{
-            //    MessageBox.Show("I couldn't find anything with those credentials.",
-            //        "Error",
-            //        MessageBoxButton.OK,
-            //        MessageBoxImage.Error);
-            //    return;
-            //}
+            // Await for user
+            User user = await getUser;
 
-            //try
-            //{
-            //    foreach (RepositoryContent r in repoLevel)
-            //    {
-            //        if (r.Name.EndsWith(".dyn"))
-            //        {
-            //            repoFiles.Add(r.Path, r.DownloadUrl);
-            //        }
-            //        else if (r.Type == "dir")
-            //        {
-            //            repoFolders.Add(r.Path);
-            //        }
-            //    }
-            //}
-            //catch (NullReferenceException)
-            //{
-            //    // Do nothing. Already managed in catch above
-            //}
+            // Close splash screen
+            splash.CloseSplash();
 
-            //try
-            //{
-            //    // Check repo's subfolders
-            //    foreach (string f in repoFolders)
-            //    {
-            //        IReadOnlyList<RepositoryContent> foldersLevel =
-            //            await client.Repository.Content.GetAllContents(
-            //                GlobalSettings.repoName.Split('/')[0],
-            //                GlobalSettings.repoName.Split('/')[1],
-            //                f);
-
-            //        foreach (RepositoryContent s in foldersLevel)
-            //        {
-            //            if (s.Name.EndsWith(".dyn"))
-            //            {
-            //                repoFiles.Add(s.Path, s.DownloadUrl);
-            //            }
-            //        }
-            //    }
-            //}
-            //catch (Exception)
-            //{
-            //    MessageBox.Show("Something went wrong",
-            //        "Error",
-            //        MessageBoxButton.OK,
-            //        MessageBoxImage.Error);
-            //    return;
-            //}
-
-            //// And close the log in form
-            //Close();
-            //// Notify user
-            //AutoClosingMessageBox.Show("The login was successful.", "Success", 3000);
-            #endregion
-
+            // Greet user
+            GitHubConnection.GreetUser(user);
+         
             // If you go to this point, it was successful
             GlobalSettings.logged = true;
 
             // And close the log in form
             Close();
-        }
-
-        private void VerificationMessage()
-        {
-            AutoClosingMessageBox.Show("Verifying credentials...",
-                "Logging in",
-                3000);
         }
     }
 }
