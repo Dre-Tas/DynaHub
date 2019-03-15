@@ -1,13 +1,7 @@
 ﻿using DynaHub.ViewModels;
 using Octokit;
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Net;
-using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -19,8 +13,6 @@ namespace DynaHub.Views
     /// </summary>
     public partial class Browser : Window
     {
-        //// Get dict from main Dynamo method
-        //Dictionary<string, string> allPaths = new Dictionary<string, string>();
         // Create variable to pass to main Dynamo method
         public static string toOpen = null;
 
@@ -64,6 +56,9 @@ namespace DynaHub.Views
         // Initialise selection variable
         internal static Repository selectedRepo;
 
+        // Store files with their download url
+        SortedDictionary<string, string> repoContent = new SortedDictionary<string, string>();
+        
         private async void OnSelectedAsync(object sender, SelectionChangedEventArgs e)
         {
             string selectionString = null;
@@ -77,99 +72,41 @@ namespace DynaHub.Views
             selectedRepo = reposList.Where(r => r.FullName == selectionString).First();
 
             // Initialize process to get repo's content
-            Task<SortedDictionary<string, string>> repoContentTask = null;
-            repoContentTask = BrowserEngine.GetRepoContentAsync(selectedRepo);
+            Task<SortedDictionary<string, string>> repoContentTask = BrowserEngine.GetRepoContentAsync(selectedRepo);
 
             // Get async result
-            SortedDictionary<string, string> repoContent = await repoContentTask;
+            repoContent = await repoContentTask;
 
             BrowserEngine.PopulateTree(repoContent, filesTree);
-
-            // Clear lists not to repeat if user changes selection
-            ClearPrevious();
         }
 
         private void TreeViewItem_OnItemSelected(object sender, RoutedEventArgs e)
         {
-            //var tree = sender as TreeView;
+            var tree = sender as TreeView;
 
-            //// ... Determine type of SelectedItem.
-            //if (tree.SelectedItem is TreeViewItem)
-            //{
-            //    // Do nothing
-            //}
+            if (tree.SelectedItem is string)
+            {
+                // Convert to actual string
+                string selectedItem = tree.SelectedItem as string;
 
-            //// Else if it's the child element
-            //else if (tree.SelectedItem is string)
-            //{
-            //    List<string> keysList = allPaths.Keys.ToList();
+                // Get corresponding file name from dictionary
+                string path = BrowserEngine.GetTreeItemNameInDict(selectedItem, repoContent);
 
-            //    string path = null;
+                // Get file's uri from dictionary using path/key
+                string uri = BrowserEngine.GetUriFromDict(repoContent, path);
 
-            //    // get path from name of the file selected by the user
-            //    foreach (string k in keysList)
-            //    {
-            //        if (k.Contains(tree.SelectedItem.ToString()))
-            //        {
-            //            path = k;
-            //        }
-            //    }
+                // Assemble download path
+                string fName = BrowserEngine.GenerateFileName(selectedItem);
 
-            //    // Instantiate web client to download file
-            //    WebClient wc = new WebClient();
+                // Download file from URI at file location just defined
+                BrowserEngine.DownlodFileAtLocation(uri, fName);
 
-            //    // Get file's uri from dictionary using path/key
-            //    string uri = allPaths[path];
+                // Pass path to downloaded file to main Dynamo method
+                toOpen = fName;
 
-
-            //    string tempFold;
-
-            //    // Create temp directory
-            //    try
-            //    {
-            //        tempFold = GlobalSettings.CreateTempFolder();
-            //    }
-            //    catch
-            //    {
-            //        MessageBox.Show("Something went wrong creating the temporary folder to store the graph.",
-            //            "Error");
-            //        return;
-            //    }
-
-            //    // Assemble download path
-            //    string fName = tempFold + tree.SelectedItem.ToString();
-
-            //    // Download file locally
-            //    try
-            //    {
-            //        wc.DownloadFile(uri, fName);
-            //    }
-            //    catch (WebException)
-            //    {
-            //        MessageBox.Show("Sorry, I couldn't find that file.", "Web Exception");
-            //        return;
-            //    }
-            //    catch
-            //    {
-            //        MessageBox.Show("Ooops, something went wrong.", "Error");
-            //        return;
-            //    }
-            //    // Notify user but don't block process in case user doesn't close window
-            //    AutoClosingMessageBox.Show("Downloaded (temporarily)! Opening now...", "Success!", 2000);
-
-            //    // Pass path to downloaded file to main Dynamo method
-            //    toOpen = fName;
-            //    // And close window
-            //    Close();
-            //}
-        }
-
-
-        private void ClearPrevious()
-        {
-            BrowserEngine.repoLevel.Clear();
-            BrowserEngine.repoFolders.Clear();
-            BrowserEngine.repoFiles.Clear();
+                // And close window
+                Close();
+            }
         }
     }
 }

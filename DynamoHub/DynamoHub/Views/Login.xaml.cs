@@ -1,5 +1,6 @@
 ﻿using DynaHub.ViewModels;
 using Octokit;
+using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
@@ -78,6 +79,10 @@ namespace DynaHub.Views
         internal static string GHemail = null;
         internal static string GHpassword = null;
 
+        private Uri validationUri = new Uri(
+            "pack://application:,,,/DynaHub;component/Resources/verification.png",
+            UriKind.RelativeOrAbsolute);
+
         private async void Button_ClickAsync(object sender, RoutedEventArgs e)
         {
             // Get user inputs
@@ -87,7 +92,7 @@ namespace DynaHub.Views
             Task<User> getUser = GitHubConnection.LoginAsync(tok);
 
             // Pop up splash screen in the meantime
-            SplashWindow splash = new SplashWindow();
+            SplashWindow splash = new SplashWindow(validationUri);
 
             // Await for user
             User user = await getUser;
@@ -105,47 +110,6 @@ namespace DynaHub.Views
             Close();
         }
 
-        //private async void GetRepos_ClickAsync(object sender, RoutedEventArgs e)
-        //{
-        //    GlobalSettings.email = email.Text;
-        //    GlobalSettings.password = password.Password;
-
-        //    // Try to authenticate through personal access token
-        //    try
-        //    {
-        //        client.Credentials = new Credentials(
-        //            GlobalSettings.email,
-        //            GlobalSettings.password);
-        //    }
-        //    catch (Exception)
-        //    {
-        //        MessageBox.Show("It seems like you've input the wrong email or password",
-        //            "Error",
-        //            MessageBoxButton.OK,
-        //            MessageBoxImage.Error);
-        //        return;
-        //    }
-
-        //    repoName.Text = "...retrieving repos";
-
-        //    try
-        //    {
-        //        User user = await client.User.Current();
-
-        //        var repos = await client.Repository.GetAllForCurrent();
-        //        foreach (var r in repos.ToList())
-        //        {
-        //            repoName.Items.Add(r.FullName);
-        //        }
-        //    }
-        //    catch (Exception)
-        //    {
-        //        repoName.Text = "wrong credentials?";
-        //        return;
-        //    }
-        //    repoName.Text = "pick repo";
-        //}
-
         private async void EmailPassB_ClickAsync(object sender, RoutedEventArgs e)
         {
             GHemail = email.Text;
@@ -155,7 +119,7 @@ namespace DynaHub.Views
             Task<User> getUser = GitHubConnection.LoginAsync(GHemail, GHpassword);
 
             // Pop up splash screen in the meantime
-            SplashWindow splash = new SplashWindow();
+            SplashWindow splash = new SplashWindow(validationUri);
 
             // Await for user
             User user = await getUser;

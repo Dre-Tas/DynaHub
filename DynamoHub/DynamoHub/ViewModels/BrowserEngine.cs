@@ -4,6 +4,7 @@ using Octokit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -37,6 +38,9 @@ namespace DynaHub.ViewModels
         internal static async Task<SortedDictionary<string, string>> GetRepoContentAsync(
             Repository repository)
         {
+            // Clear lists not to repeat if user changes selection
+            ClearPrevious();
+
             long repositoryID = repository.Id;
             // Get everything in repo at higher level of hierarchy
             // (in this case retrieves readme.MD, and folders)
@@ -138,6 +142,75 @@ namespace DynaHub.ViewModels
                 // Add them to the treeview
                 tree.Items.Add(tvItem);
             }
+        }
+
+        internal static string GetTreeItemNameInDict(string treeItem,
+                                SortedDictionary<string, string> dict)
+        {
+            // Get keys collection in dict
+            SortedDictionary<string, string>.KeyCollection keys = dict.Keys;
+
+            // Get corresponding
+            string path = keys.Where(k => k.Contains(treeItem)).First();
+
+            return path;
+        }
+
+        internal static string GetUriFromDict(SortedDictionary<string, string> dict, string key)
+        {
+            return dict[key];
+        }
+
+        internal static string GenerateFileName(string name)
+        {
+            string tempFold;
+
+            // Create temp directory
+            try
+            {
+                tempFold = GlobalSettings.CreateTempFolder();
+            }
+            catch
+            {
+                MessageBox.Show("Something went wrong creating the temporary folder to store the graph.",
+                    "Error");
+                return null;
+            }
+
+            // Assemble download path
+            return tempFold + name;
+        }
+
+        internal static void DownlodFileAtLocation(string uri, string location)
+        {
+            // Instantiate web client to download file
+            WebClient wc = new WebClient();
+
+            // Download file locally
+            try
+            {
+                wc.DownloadFile(uri, location);
+            }
+            catch (WebException)
+            {
+                Helpers.ErrorMessage("Sorry, I couldn't find that file online.");
+                return;
+            }
+            catch
+            {
+                Helpers.ErrorMessage("Ooops, something went wrong.");
+                return;
+            }
+
+            // Notify user but don't block process in case user doesn't close window
+            AutoClosingMessageBox.Show("Downloaded (temporarily)! Opening now...", "Success!", 2000);
+        }
+
+        private static void ClearPrevious()
+        {
+            repoLevel.Clear();
+            repoFolders.Clear();
+            repoFiles.Clear();
         }
     }
 }

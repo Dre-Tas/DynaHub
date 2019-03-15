@@ -9,20 +9,19 @@ namespace DynaHub.Views
     {
         private Form form = null;
 
-        public SplashWindow()
+        public SplashWindow(Uri uri)
         {
             form = new Form();
 
-            form.Width = Convert.ToInt32(Screen.PrimaryScreen.Bounds.Width * 0.30);
-            form.Height = Convert.ToInt32(Screen.PrimaryScreen.Bounds.Height * 0.12);
-
-            Uri uri = new Uri("pack://application:,,,/DynaHub;component/Resources/verification.png", UriKind.RelativeOrAbsolute);
-
             StreamResourceInfo info = System.Windows.Application.GetResourceStream(uri);
 
-            Image myImage = Image.FromStream(info.Stream);
+            Image splashImage = Image.FromStream(info.Stream);
 
-            form.BackgroundImage = myImage;
+            // Get image dimensions
+            form.Width = splashImage.Width;
+            form.Height = splashImage.Height;            
+
+            form.BackgroundImage = splashImage;
 
             form.BackgroundImageLayout = ImageLayout.Stretch;
 
