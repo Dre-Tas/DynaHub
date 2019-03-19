@@ -1,5 +1,6 @@
 ﻿using DynaHub.ViewModels;
 using Octokit;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,9 +15,7 @@ namespace DynaHub.Views
     public partial class Browser : Window
     {
         // Create variable to pass to main Dynamo method
-        public static string toOpen = null;
-
-        private bool alreadyLoaded = false;
+        internal static string toOpen = null;
 
         public Browser()
         {
@@ -27,38 +26,32 @@ namespace DynaHub.Views
             selectReposCB.Text = "select a repository";
         }
 
-        private List<Repository> reposList = new List<Repository>();
+        private List<Repository> localReposList = new List<Repository>();
 
-        private async void PopulateComboAsync(object sender, RoutedEventArgs e)
+        private async void PopulateComboAsync(object sender, EventArgs e)
         {
-            // Only loads the list of repos the first time. Save calculations
-            if (!alreadyLoaded)
+            if (selectReposCB.Items.Count == 0)
             {
-                // Start async process straight away
-                Task<IReadOnlyList<Repository>> repos = BrowserEngine.GetUserReposAsync();
+                Task<IReadOnlyList<Repository>> getRepos = GitHubInfo.GetUserReposAsync();
 
                 // Display in-the-meantime text
                 selectReposCB.Text = "...retrieving repos";
 
-                // Wait to get the repos
-                IReadOnlyList<Repository> repositories = await repos;
+                IReadOnlyList<Repository> repositories = await getRepos;
 
                 // Populate combobox
                 foreach (Repository r in repositories)
                 {
                     selectReposCB.Items.Add(r.FullName);
-                    reposList.Add(r);
+                    // Populate local list (needed below)
+                    localReposList.Add(r);
                 }
-                alreadyLoaded = true;
             }
         }
 
-        // Initialise selection variable
-        internal static Repository selectedRepo;
-
         // Store files with their download url
         SortedDictionary<string, string> repoContent = new SortedDictionary<string, string>();
-        
+
         private async void OnSelectedAsync(object sender, SelectionChangedEventArgs e)
         {
             string selectionString = null;
@@ -69,10 +62,10 @@ namespace DynaHub.Views
 
             // Get repository object from user selection
             // It's supposed that the user has only one repo with that path (GH rule)
-            selectedRepo = reposList.Where(r => r.FullName == selectionString).First();
+            GitHubInfo.selectedRepo = localReposList.Where(r => r.FullName == selectionString).First();
 
             // Initialize process to get repo's content
-            Task<SortedDictionary<string, string>> repoContentTask = BrowserEngine.GetRepoContentAsync(selectedRepo);
+            Task<SortedDictionary<string, string>> repoContentTask = GitHubInfo.GetRepoContentAsync(GitHubInfo.selectedRepo, ".dyn");
 
             // Get async result
             repoContent = await repoContentTask;

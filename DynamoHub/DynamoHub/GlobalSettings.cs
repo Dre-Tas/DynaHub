@@ -1,5 +1,4 @@
-﻿using Octokit;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -29,7 +28,7 @@ namespace DynaHub
         private static readonly string tempFolderPath =
             Path.GetFullPath(Path.Combine(assemblyFolder, @"..\temp\"));
         // Navigate to Dynamo's packages folder
-        private static readonly string packFolderPath =
+        internal static readonly string packFolderPath =
             Path.GetFullPath(Path.Combine(assemblyFolder, @"..\..\"));
 
         public static string CreateTempFolder()
@@ -62,77 +61,6 @@ namespace DynaHub
                 }
             }
         }
-
-        //public static async void DownloadPackagesAsync()
-        //{
-        //    if (Directory.Exists(packFolderPath))
-        //    {
-        //        // Store package folder
-        //        IReadOnlyList<RepositoryContent> foldersLevel = null;
-
-        //        try
-        //        {
-        //            // Check repo's subfolders
-        //            foreach (string f in Views.Login.repoFolders)
-        //            {
-        //                // Take only packages folder
-        //                if (f == "packages")
-        //                {
-        //                    // If user logged in through token
-        //                    if (user != null && repo != null)
-        //                    {
-        //                        foldersLevel =
-        //                            await Views.Login.client.Repository.Content.GetAllContents(
-        //                                user,
-        //                                repo,
-        //                                f);
-        //                    }
-        //                    // If user logged in through credentials
-        //                    else if (repoName != null)
-        //                    {
-        //                        foldersLevel =
-        //                            await Views.Login.client.Repository.Content.GetAllContents(
-        //                                repoName.Split('/')[0],
-        //                                repoName.Split('/')[1],
-        //                                f);
-        //                    }
-        //                }
-        //            }
-        //        }
-        //        catch
-        //        {
-        //            MessageBox.Show("Sorry, can't find the packages folder.",
-        //                "Error");
-        //        }
-
-        //        try
-        //        {
-        //            // Instantiate web client to download file
-        //            WebClient wc = new WebClient();
-
-        //            foreach (RepositoryContent s in foldersLevel)
-        //            {
-        //                // Take only compressed files
-        //                if (s.Name.EndsWith(".zip"))
-        //                {
-        //                    // Download compressed file
-        //                    wc.DownloadFile(s.DownloadUrl, packFolderPath + s.Name);
-        //                    // Extract compressed file
-        //                    ZipFile.ExtractToDirectory(packFolderPath + s.Name, packFolderPath);
-        //                    // Delete original compressed file
-        //                    File.Delete(packFolderPath + s.Name);
-        //                }
-        //            }
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            MessageBox.Show(ex.Message, "Error while downloading");
-        //        }
-
-        //        // Notify user
-        //        AutoClosingMessageBox.Show("You now have all the right packages.", "Success", 3000);
-        //    }
-        //}
 
     }
 }

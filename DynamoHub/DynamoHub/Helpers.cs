@@ -17,11 +17,18 @@ namespace DynaHub
                 MessageBoxImage.Error);
         }
 
+        internal static void InfoMessage(string message)
+        {
+            MessageBox.Show(message,
+                "FYI",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+        }
+
         internal static void SuccessMessage(string message)
         {
             AutoClosingMessageBox.Show(message, "Success", 3000);
         }
-
     }
 
     // From https://stackoverflow.com/questions/23692127/auto-close-message-box

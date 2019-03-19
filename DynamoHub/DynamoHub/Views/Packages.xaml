@@ -1,11 +1,13 @@
-﻿<Window x:Class="DynaHub.Views.Browser"
+﻿<Window x:Class="DynaHub.Views.Packages"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:DynaHub.Views"
-             mc:Ignorable="d" Background="White"
-        Width="450" Height="600" Title="GitHub repo" Icon="/DynaHub;component/Resources/DynaHubLogo_s.png">
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+        Width="450" Height="600" Title="GitHub repo"
+        Icon="/DynaHub;component/Resources/DynaHubLogo_s.png">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="80"/>
@@ -25,13 +27,12 @@
             Margin="5"
             Source="pack://application:,,,/DynaHub;component/Resources/DynaHubLogo.png"/>
 
-        <TreeView
-            Grid.Row="1" Name="filesTree"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Stretch"
-            BorderBrush="White" Grid.RowSpan="2"
-            MouseDoubleClick="TreeViewItem_OnItemSelected">
-            <TreeViewItem Header="Select repository first"/>
-        </TreeView>
+        <ListBox Grid.Row="1" Name="packagesList"
+                 HorizontalAlignment="Stretch" Margin="10,10,10,40" VerticalAlignment="Stretch">
+        </ListBox>
+        <Button Content="Get All Packages" Name="GetPacks"
+                HorizontalAlignment="right" Margin="10" Grid.Row="1" VerticalAlignment="Bottom"
+                Click="GetPacks_Click"/>
+
     </Grid>
 </Window>

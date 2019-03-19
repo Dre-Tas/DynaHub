@@ -98,6 +98,7 @@
       <HintPath>..\packages\CommonServiceLocator.1.0\lib\NET35\Microsoft.Practices.ServiceLocation.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
@@ -123,6 +124,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression.FileSystem" />
@@ -151,12 +153,17 @@
     <Compile Include="ViewExtension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\BrowserEngine.cs" />
+    <Compile Include="ViewModels\GetPackages.cs" />
     <Compile Include="ViewModels\GitHubConnection.cs" />
+    <Compile Include="ViewModels\GitHubInfo.cs" />
     <Compile Include="Views\Browser.xaml.cs">
       <DependentUpon>Browser.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Login.xaml.cs">
       <DependentUpon>Login.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Packages.xaml.cs">
+      <DependentUpon>Packages.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SplashWindow.cs" />
   </ItemGroup>
@@ -184,6 +191,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Packages.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\github-logo.png" />
@@ -195,7 +206,14 @@
     <Resource Include="Resources\DynaHubLogo.png" />
   </ItemGroup>
   <ItemGroup>
-    <SplashScreen Include="Resources\verification.png" />
+    <SplashScreen Include="Resources\verification.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </SplashScreen>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Downloading.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!--Using AfterBuild Events to copy the extension to the Dynamo packages folder-->

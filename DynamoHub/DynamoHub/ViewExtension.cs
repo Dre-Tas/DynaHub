@@ -1,13 +1,17 @@
 ﻿using DynaHub.ViewModels;
+using Dynamo.Models;
 using Dynamo.ViewModels;
 using Dynamo.Wpf.Extensions;
 using Octokit;
 using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Diagnostics;
+using System.IO;
 using System.Net;
 using System.Windows;
 using System.Windows.Controls;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 
 
 namespace DynaHub
@@ -19,15 +23,17 @@ namespace DynaHub
     {
         public string UniqueId => "7E85F38F-0A19-4F24-9E18-96845764780Q";
         public string Name => "DynaHub View Extension";
-
+        
         // create client
-        readonly GitHubClient client = new GitHubClient(new ProductHeaderValue("DynaHub"));
+        //readonly GitHubClient client = new GitHubClient(new ProductHeaderValue("DynaHub"));
 
         /// <summary>
         /// Method that is called when Dynamo starts, but is not yet ready to be used.
         /// </summary>
         /// <param name="vsp">Parameters that provide references to Dynamo settings, version and extension manager.</param>
-        public void Startup(ViewStartupParams vsp) { }
+        public void Startup(ViewStartupParams vsp)
+        {
+        }
 
         /// <summary>
         /// Method that is called when Dynamo has finished loading and the UI is ready to be interacted with.
@@ -78,25 +84,26 @@ namespace DynaHub
                 }
             };
 
-            //packagesMenuItem.Click += (sender, args) =>
-            //{
-            //    if (Views.Login.logged)
-            //    {
-            //        // Download packages to Dynamo's packages folder
-            //        GlobalSettings.DownloadPackagesAsync();
-            //    }
-            //    else
-            //    {
-            //        MessageBox.Show("You'll need to login before downloading the packages!");
-            //    }
-            //};
+            packagesMenuItem.Click += (sender, args) =>
+            {
+                if (GlobalSettings.logged)
+                {
+                    // Download packages to Dynamo's packages folder
+                    Views.Packages p = new Views.Packages(vlp);
+                    p.ShowDialog();
+                }
+                else
+                {
+                    Helpers.ErrorMessage("You'll need to login before downloading the packages!");
+                }
+            };
 
             // Add main menu to Dynamo
             vlp.dynamoMenu.Items.Add(extensionMenu);
             // Add sub-menus to main menu
             extensionMenu.Items.Add(loginMenuItem);
             extensionMenu.Items.Add(browseMenuItem);
-            //extensionMenu.Items.Add(packagesMenuItem);
+            extensionMenu.Items.Add(packagesMenuItem);
         }
 
         /// <summary>

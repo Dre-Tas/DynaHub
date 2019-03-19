@@ -13,78 +13,6 @@ namespace DynaHub.ViewModels
 {
     class BrowserEngine
     {
-        internal static async Task<IReadOnlyList<Repository>> GetUserReposAsync()
-        {
-            // Get users repos from GH
-            IReadOnlyList<Repository> userRepos =
-                await GitHubConnection.client.Repository.GetAllForCurrent();
-
-            return userRepos;
-        }
-
-        #region BAD!!!!
-        // This should probably be recursive to go through any folder at any level!
-
-        // contents of the repo highest level
-        internal static List<RepositoryContent> repoLevel = new List<RepositoryContent>();
-
-        // List for all folders in repo to be queried
-        internal static List<string> repoFolders = new List<string>();
-
-        // Dictionary with both repo path and download_url
-        internal static SortedDictionary<string, string> repoFiles =
-            new SortedDictionary<string, string>();
-
-        internal static async Task<SortedDictionary<string, string>> GetRepoContentAsync(
-            Repository repository)
-        {
-            // Clear lists not to repeat if user changes selection
-            ClearPrevious();
-
-            long repositoryID = repository.Id;
-            // Get everything in repo at higher level of hierarchy
-            // (in this case retrieves readme.MD, and folders)
-            IReadOnlyList<RepositoryContent> allContent = null;
-            allContent =
-                    await GitHubConnection.client.Repository.Content.GetAllContents(repositoryID);
-            // transform into a normal list that can be cleared
-            foreach (var c in allContent)
-            {
-                repoLevel.Add(c);
-            }
-
-            foreach (RepositoryContent r in repoLevel)
-            {
-                if (r.Name.EndsWith(".dyn"))
-                {
-                    repoFiles.Add(r.Path, r.DownloadUrl);
-                }
-                else if (r.Type == "dir")
-                {
-                    repoFolders.Add(r.Path);
-                }
-            }
-
-            // Check repo's subfolders
-            foreach (string f in repoFolders)
-            {
-                // Get from specific path in repo
-                IReadOnlyList<RepositoryContent> foldersLevel =
-                    await GitHubConnection.client.Repository.Content.GetAllContents(
-                        repositoryID, f);
-
-                foreach (RepositoryContent s in foldersLevel)
-                {
-                    if (s.Name.EndsWith(".dyn"))
-                    {
-                        repoFiles.Add(s.Path, s.DownloadUrl);
-                    }
-                }
-            }
-
-            return repoFiles;
-        }
-        #endregion BAD!!!!
 
         internal static void PopulateTree(SortedDictionary<string, string> content, TreeView tree)
         {
@@ -204,13 +132,6 @@ namespace DynaHub.ViewModels
 
             // Notify user but don't block process in case user doesn't close window
             AutoClosingMessageBox.Show("Downloaded (temporarily)! Opening now...", "Success!", 2000);
-        }
-
-        private static void ClearPrevious()
-        {
-            repoLevel.Clear();
-            repoFolders.Clear();
-            repoFiles.Clear();
         }
     }
 }

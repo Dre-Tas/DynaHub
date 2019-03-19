@@ -1,4 +1,5 @@
-﻿using Octokit;
+﻿using DynaHub.Views;
+using Octokit;
 using System;
 using System.Threading.Tasks;
 using System.Windows;
