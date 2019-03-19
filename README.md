@@ -21,7 +21,7 @@ Also, going on github, finding your file, downloading it, opening Revit, opening
 But, fear no more. Dynamo allows extensions now. So we came up with DynaHub, a way to connect to your GitHub account and grab the graphs stored there, but **without leaving Dynamo**!
 
 At the moment, DynaHub enables you to **login** to your GitHub account  
-![DynaHub Login](/imgs/Login.gif)
+![DynaHub Login](/imgs/Login_updated.gif)
 
 And then you can **browse** what's in your repo and **open** the online-stored graph  
 ![DynaHub Browse](/imgs/Browse.gif)
