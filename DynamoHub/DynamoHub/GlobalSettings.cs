@@ -19,8 +19,6 @@ namespace DynaHub
         // Temp folder
         public static DirectoryInfo di = null;
 
-        // Define where to download GitHub file inside of Dynamo folders
-
         // Get location of assembly / dll file
         private static readonly string assemblyFolder =
             Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -30,6 +28,21 @@ namespace DynaHub
         // Navigate to Dynamo's packages folder
         internal static readonly string packFolderPath =
             Path.GetFullPath(Path.Combine(assemblyFolder, @"..\..\"));
+
+        #region URIs
+        internal static Uri validationUri = new Uri(
+            "pack://application:,,,/DynaHub;component/Resources/verification.png",
+            UriKind.RelativeOrAbsolute);
+
+        internal static Uri validatedUri = new Uri(
+            "pack://application:,,,/DynaHub;component/Resources/verified.png",
+            UriKind.RelativeOrAbsolute);
+
+        internal static Uri downloadingUri = new Uri(
+            "pack://application:,,,/DynaHub;component/Resources/Downloading.png",
+            UriKind.RelativeOrAbsolute);
+
+        #endregion
 
         public static string CreateTempFolder()
         {

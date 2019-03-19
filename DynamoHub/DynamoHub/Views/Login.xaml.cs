@@ -79,10 +79,6 @@ namespace DynaHub.Views
         internal static string GHemail = null;
         internal static string GHpassword = null;
 
-        private Uri validationUri = new Uri(
-            "pack://application:,,,/DynaHub;component/Resources/verification.png",
-            UriKind.RelativeOrAbsolute);
-
         private async void Button_ClickAsync(object sender, RoutedEventArgs e)
         {
             // Get user inputs
@@ -92,13 +88,22 @@ namespace DynaHub.Views
             Task<User> getUser = GitHubConnection.LoginAsync(tok);
 
             // Pop up splash screen in the meantime
-            SplashWindow splash = new SplashWindow(validationUri);
+            SplashWindow verificationSplash = new SplashWindow(GlobalSettings.validationUri);
 
             // Await for user
             User user = await getUser;
 
             // Close splash screen
-            splash.CloseSplash();
+            verificationSplash.CloseSplash();
+
+            // Pop up splash screen in the meantime
+            SplashWindow verifiedSplash = new SplashWindow(GlobalSettings.validatedUri);
+
+            // Wait x seconds showing message
+            System.Threading.Thread.Sleep(2000);
+
+            // Close splash screen
+            verifiedSplash.CloseSplash();
 
             // Greet user
             GitHubConnection.GreetUser(user);
@@ -119,13 +124,22 @@ namespace DynaHub.Views
             Task<User> getUser = GitHubConnection.LoginAsync(GHemail, GHpassword);
 
             // Pop up splash screen in the meantime
-            SplashWindow splash = new SplashWindow(validationUri);
+            SplashWindow splash = new SplashWindow(GlobalSettings.validationUri);
 
             // Await for user
             User user = await getUser;
 
             // Close splash screen
             splash.CloseSplash();
+
+            // Pop up splash screen in the meantime
+            SplashWindow verifiedSplash = new SplashWindow(GlobalSettings.validatedUri);
+
+            // Wait x seconds showing message
+            System.Threading.Thread.Sleep(2000);
+
+            // Close splash screen
+            verifiedSplash.CloseSplash();
 
             // Greet user
             GitHubConnection.GreetUser(user);

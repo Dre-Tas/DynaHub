@@ -39,69 +39,6 @@ namespace DynaHub.ViewModels
                 listBox.Items.Add("No zipped packages found here.");
         }
 
-        internal static void DownloadPackages(
-            SortedDictionary<string, string> repoContent,
-            ViewLoadedParams vlp)
-        {
-            if (Directory.Exists(GlobalSettings.packFolderPath))
-            {
-                // Instantiate web client to download file
-                WebClient wc = new WebClient();
-
-                AutoClosingMessageBox.Show("Downloading packages..." +
-                    Environment.NewLine +
-                    "I'll let you know when I'm done",
-                    "Packages",
-                    3000);
-
-                // Count how many to packages to uninstall
-                int countUninstall = 0;
-
-                foreach (KeyValuePair<string, string> pair in repoContent)
-                {
-                    string zipName = pair.Key.Split('/').Last();
-                    string downloadPath = GlobalSettings.packFolderPath + zipName;
-
-                    string packagePath = downloadPath.Replace(".zip", "");
-
-                    // Delete package if already existing
-                    // (to make sure you get right version of package)
-                    if (Directory.Exists(packagePath))
-                    {
-                        // Delete package by adding to list of packages to uninstall
-                        vlp.ViewStartupParams.Preferences
-                            .PackageDirectoriesToUninstall.Add(packagePath);
-
-                        countUninstall++;
-                    }
-
-                    if (countUninstall == 0)
-                    {
-                        // Download compressed file
-                        wc.DownloadFile(pair.Value, downloadPath);
-                        // Extract compressed file
-                        ZipFile.ExtractToDirectory(downloadPath, GlobalSettings.packFolderPath);
-                        // Delete original compressed file
-                        File.Delete(downloadPath);
-                    }
-                }
-
-                if (countUninstall != 0)
-                {
-                    Helpers.InfoMessage("...Now don't freak out, ok?" +
-                        Environment.NewLine +
-                        $"you already had {countUninstall} of the packages installed, so I have to " +
-                        "uninstall them/it to install the right version." +
-                        Environment.NewLine +
-                        "To do so I'll have to close Dynamo now. You'll have to restart it and then " +
-                        "re-run the Get Packages command so that I can download the right ones." +
-                        Environment.NewLine + "Alright, I'll see you in a bit!");
-                }
-
-                CloseDynamo();
-            }
-        }
-
         internal static List<string> CheckUninstall(SortedDictionary<string, string> repoContent)
         {
             List<string> toUninstall = new List<string>();
@@ -148,12 +85,6 @@ namespace DynaHub.ViewModels
         // This doesn't come from the check because I want to install ALL the packages from gh
         internal static void InstallPackages(SortedDictionary<string, string> repoContent)
         {
-            AutoClosingMessageBox.Show("Downloading packages..." +
-                Environment.NewLine +
-                "I'll let you know when I'm done",
-                "Packages",
-                3000);
-
             // Instantiate web client to download file
             WebClient wc = new WebClient();
 

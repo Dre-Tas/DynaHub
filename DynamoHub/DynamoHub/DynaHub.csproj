@@ -206,12 +206,17 @@
     <Resource Include="Resources\DynaHubLogo.png" />
   </ItemGroup>
   <ItemGroup>
-    <SplashScreen Include="Resources\verification.png">
+    <Resource Include="Resources\verification.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </SplashScreen>
+    </Resource>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Downloading.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\verified.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>

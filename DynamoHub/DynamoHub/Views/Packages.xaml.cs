@@ -65,6 +65,7 @@ namespace DynaHub.Views
 
         private async void OnSelectedAsync(object sender, SelectionChangedEventArgs e)
         {
+            // Let user know DynaHub is retrieving stuff
             packagesList.Items.Clear();
 
             ListBoxItem asyncItem = new ListBoxItem();
@@ -72,10 +73,10 @@ namespace DynaHub.Views
 
             packagesList.Items.Add(asyncItem);
 
+            // Show name of selected repo in combobox
             string selectionString = null;
             selectionString = selectReposCB.SelectedItem.ToString();
 
-            // Show text in combobox
             selectReposCB.Text = selectionString;
 
             // Get repository object from user selection
@@ -98,8 +99,6 @@ namespace DynaHub.Views
         {
             try
             {
-                //GetPackages.DownloadPackages(repoContent, loadedParams);
-
                 // Check if there are packages to be uninstalled before installing all the right packages
                 List<string> uninstallFirst = GetPackages.CheckUninstall(repoContent);
 
@@ -110,8 +109,15 @@ namespace DynaHub.Views
                 }
                 else
                 {
+                    // Pop up splash screen in the meantime
+                    SplashWindow downloadingSplash =
+                        new SplashWindow(GlobalSettings.downloadingUri);
+
                     // Once all the duplicates have been uninstalled > install ALL packages
                     GetPackages.InstallPackages(repoContent);
+
+                    // Close splash screen
+                    downloadingSplash.CloseSplash();
 
                     // Notify user
                     MessageBox.Show("You now have all the right packages.", "Success");
