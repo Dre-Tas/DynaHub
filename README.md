@@ -27,7 +27,7 @@ And then you can **browse** what's in your repo and **open** the online-stored g
 ![DynaHub Browse](/imgs/Browse_updated.gif)
 
 Finally, did it ever happen to you too that you make a graph for someone to use and they get back to you saying _"Doesn't work! It's broken!! Everything's red and yellow!"_ and you realise it's just they don't have the right packages?  
-Load your zipped packages (they HAVE TO be zipped to work...but this makes it much faster anyway) in a folder called _packages_ to allow everyone to download the right packages
+Load your zipped packages (they HAVE TO be zipped to work...but this makes it much faster anyway) in a folder called _packages_ to allow everyone to download the right packages with the **Get Packages** feature
 ![DynaHub Get Packages](/imgs/GetPackages.gif)
 
 ## Talk techy to me
