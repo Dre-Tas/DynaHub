@@ -51,15 +51,8 @@ namespace DynaHub.ViewModels
 
         internal static void GreetUser(User user)
         {
-            if (user == null)
-            {
-                Helpers.ErrorMessage("It seems like you've input the wrong token");
-            }
-            else
-            {
-                // Get user and greet user to check if input token is correct
-                Helpers.SuccessMessage($"You logged in successfully {user.Name}!");
-            }
+            // Get user and greet user to check if input token is correct
+            Helpers.SuccessMessage($"You logged in successfully {user.Name}!");
         }
     }
 }

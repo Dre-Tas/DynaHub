@@ -132,20 +132,28 @@ namespace DynaHub.Views
             // Close splash screen
             splash.CloseSplash();
 
-            // Pop up splash screen in the meantime
-            SplashWindow verifiedSplash = new SplashWindow(GlobalSettings.validatedUri);
+            if (user != null)
+            {
+                // Pop up splash screen in the meantime
+                SplashWindow verifiedSplash = new SplashWindow(GlobalSettings.validatedUri);
 
-            // Wait x seconds showing message
-            System.Threading.Thread.Sleep(2000);
+                // Wait x seconds showing message
+                System.Threading.Thread.Sleep(2000);
 
-            // Close splash screen
-            verifiedSplash.CloseSplash();
+                // Close splash screen
+                verifiedSplash.CloseSplash();
 
-            // Greet user
-            GitHubConnection.GreetUser(user);
-         
-            // If you go to this point, it was successful
-            GlobalSettings.logged = true;
+                // Greet user
+                GitHubConnection.GreetUser(user);
+
+                // If you go to this point, it was successful
+                GlobalSettings.logged = true;
+            }
+            else
+            {
+                Helpers.ErrorMessage("It seems like you've input the wrong credentials/token");
+                GlobalSettings.logged = false;
+            }
 
             // And close the log in form
             Close();

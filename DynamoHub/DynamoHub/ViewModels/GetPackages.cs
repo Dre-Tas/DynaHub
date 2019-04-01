@@ -65,10 +65,8 @@ namespace DynaHub.ViewModels
             int countUninstall = uninstall.Count;
 
             // Communicate to user
-            Helpers.InfoMessage("...Now don't freak out, ok?" +
-                Environment.NewLine +
-                $"you already had {countUninstall} of the packages installed, so I have to " +
-                "uninstall them/it in order to to install the right version." +
+            Helpers.InfoMessage($"You already had {countUninstall} of the packages installed, " +
+                $"so I have to uninstall them/it in order to to install the right version." +
                 Environment.NewLine +
                 "To do so I'll have to close Dynamo now. You'll have to restart it and then" +
                 "re-run the Get Packages command so that I can download the right ones." +
