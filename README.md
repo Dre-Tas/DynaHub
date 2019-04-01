@@ -14,30 +14,36 @@ So, for the purposes of managing expectations, please be mindful that this is a 
 * [How to install](#how-to-install)
 
 ## An Octocat plays Meccano
-At Ridley/Willow we recognised the need to store all our Dynamo graphs in a centralised cloud-based safe place. Even better if it was possible to track changes to those graphs, thus avoiding unwanted modification. So, yeah, GitHub sounded like the perfect solution!
+At Ridley/Willow we recognised the need to store all our Dynamo graphs in a centralised, cloud-based, safe place. Even better if it was possible to track changes to those graphs, thus avoiding unwanted modification. So, yeah, GitHub sounded like the perfect solution!
 
 Also, going on github, finding your file, downloading it, opening Revit, opening Dynamo, opening the .dyn file, etc. sounded a bit cumbersome and time consuming.
 
 But, fear no more. Dynamo allows extensions now. So we came up with DynaHub, a way to connect to your GitHub account and grab the graphs stored there, but **without leaving Dynamo**!
 
 At the moment, DynaHub enables you to **login** to your GitHub account  
-![DynaHub Login](/imgs/Login.gif)
+![DynaHub Login](/imgs/Login_updated.gif)
 
 And then you can **browse** what's in your repo and **open** the online-stored graph  
-![DynaHub Browse](/imgs/Browse.gif)
+![DynaHub Browse](/imgs/Browse_updated.gif)
+
+Finally, did it ever happen to you too that you make a graph for someone to use and they get back to you saying _"Doesn't work! It's broken!! Everything's red and yellow!"_ and you realise it's just they don't have the right packages?  
+Load your zipped packages (they HAVE TO be zipped to work...but this makes it much faster anyway) in a folder called _packages_ to allow everyone to download the right packages with the **Get Packages** feature
+![DynaHub Get Packages](/imgs/GetPackages.gif)
 
 ## Talk techy to me
-* The only functionality implemented thus far is browsing to a simple (*) repo structure, download the _.dyn_ file requested by the user in a _temp_ folder created within Dynamo folders and then open it in Dynamo.
+* For now, browsing is only working on a simple (*) repo structure, download the _.dyn_ file requested by the user in a _temp_ folder created within Dynamo folders and then open it in Dynamo.
 
 * When the user is done using the graph, the only thing to do is going to be to close Dynamo. When closing Dynamo, the _temp_ folder created by DynaHub will be deleted with all the files inside.
 
 * DynaHub uses **[OctoKit](https://github.com/octokit/octokit.net)**, a NuGet package developed by GitHub for an easier usage within the .NET framework.
 
+* Getting the packages could be tricky. You cannot delete or add folders that are used by a program, so you will have to close Dynamo to make the changes of installing/uninstalling effective. To simplify your life, DynaHub will close Dynamo for you, but then you'll have to restart it yourself. In case you're using Dynamo on Revit, you'll have to restart Revit too.
+
 ## Current limitations
 (*) Right now DynaHub is unable to read complex repository structures. At the moment it will pick up all the elements that are at the repo's root level or one level below (folders)
 ![DynaHub Struc](/imgs/FoldStruct.png)
 
-Nothing under this level will be picked up. For now.
+Nothing under this level will be picked up. For now...
 
 ## Future features
 * Handle more complex repo structures
