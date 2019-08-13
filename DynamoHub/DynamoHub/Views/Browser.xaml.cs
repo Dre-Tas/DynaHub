@@ -9,9 +9,6 @@ using System.Windows.Controls;
 
 namespace DynaHub.Views
 {
-    /// <summary>
-    /// Interaction logic for Browser.xaml
-    /// </summary>
     public partial class Browser : Window
     {
         // Create variable to pass to main Dynamo method
@@ -26,7 +23,7 @@ namespace DynaHub.Views
             selectReposCB.Text = "select a repository";
         }
 
-        private List<Repository> localReposList = new List<Repository>();
+        private readonly List<Repository> localReposList = new List<Repository>();
 
         private async void PopulateComboAsync(object sender, EventArgs e)
         {
@@ -65,7 +62,8 @@ namespace DynaHub.Views
             GitHubInfo.selectedRepo = localReposList.Where(r => r.FullName == selectionString).First();
 
             // Initialize process to get repo's content
-            Task<SortedDictionary<string, string>> repoContentTask = GitHubInfo.GetRepoContentAsync(GitHubInfo.selectedRepo, ".dyn");
+            Task<SortedDictionary<string, string>> repoContentTask =
+                GitHubInfo.GetRepoContentAsync(GitHubInfo.selectedRepo, ".dyn");
 
             // Get async result
             repoContent = await repoContentTask;

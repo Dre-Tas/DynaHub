@@ -24,9 +24,6 @@ namespace DynaHub
         public string UniqueId => "7E85F38F-0A19-4F24-9E18-96845764780Q";
         public string Name => "DynaHub View Extension";
         
-        // create client
-        //readonly GitHubClient client = new GitHubClient(new ProductHeaderValue("DynaHub"));
-
         /// <summary>
         /// Method that is called when Dynamo starts, but is not yet ready to be used.
         /// </summary>
@@ -53,6 +50,7 @@ namespace DynaHub
 
             var VM = vlp.DynamoWindow.DataContext as DynamoViewModel;
 
+            // Define Login menu option
             loginMenuItem.Click += (sender, args) =>
             {
                 if (!GlobalSettings.logged)
@@ -67,6 +65,7 @@ namespace DynaHub
                 }
             };
 
+            // Define Browse menu option
             browseMenuItem.Click += (sender, args) =>
             {
                 if (GlobalSettings.logged)
@@ -84,6 +83,7 @@ namespace DynaHub
                 }
             };
 
+            // Define Get Packages menu option
             packagesMenuItem.Click += (sender, args) =>
             {
                 if (GlobalSettings.logged)
@@ -111,6 +111,7 @@ namespace DynaHub
         /// </summary>
         public void Shutdown()
         {
+            // When closing Dynamo, delete all the temporary files
             GlobalSettings.DeleteTempFolder();
         }
 

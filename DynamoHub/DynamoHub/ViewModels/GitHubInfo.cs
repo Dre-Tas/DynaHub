@@ -48,9 +48,9 @@ namespace DynaHub.ViewModels
             long repositoryID = repository.Id;
             // Get everything in repo at higher level of hierarchy
             // (in this case retrieves readme.MD, and folders)
-            IReadOnlyList<RepositoryContent> allContent = null;
-            allContent =
-                    await GitHubConnection.client.Repository.Content.GetAllContents(repositoryID);
+            IReadOnlyList<RepositoryContent> allContent = 
+                await GitHubConnection.client.Repository.Content.GetAllContents(repositoryID);
+
             // transform into a normal list that can be cleared
             foreach (var c in allContent)
             {
