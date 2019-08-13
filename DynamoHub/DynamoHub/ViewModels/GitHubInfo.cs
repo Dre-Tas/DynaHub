@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace DynaHub.ViewModels
 {
+    /// <summary>
+    /// The class holds all the info on the GH repo being browsed
+    /// </summary>
     class GitHubInfo
     {
         internal static bool gotRepos = false;
@@ -26,9 +29,6 @@ namespace DynaHub.ViewModels
         // Initialise selection variable
         internal static Repository selectedRepo;
 
-        #region ReviewCodeHere
-        // This should probably be recursive to go through any folder at any level!
-
         // contents of the repo highest level
         internal static List<RepositoryContent> repoLevel = new List<RepositoryContent>();
 
@@ -39,56 +39,57 @@ namespace DynaHub.ViewModels
         internal static SortedDictionary<string, string> repoFiles =
             new SortedDictionary<string, string>();
 
+        private static long repositoryID;
+
+        // Recursive
+        internal static async Task GetDynsFromFolders(RepositoryContent repoContent)
+        {
+            if (repoContent.Name.EndsWith(".dyn"))
+            {
+                repoFiles.Add(repoContent.Path, repoContent.DownloadUrl);
+            }
+            else if (repoContent.Type == "dir")
+            {
+                string folderPath = repoContent.Path;
+
+                // Get from specific path in repo
+                IReadOnlyList<RepositoryContent> subFolders =
+                    await GitHubConnection.client.Repository.Content.GetAllContents(
+                        repositoryID, folderPath);
+
+                foreach (RepositoryContent content in subFolders)
+                {
+                    await GetDynsFromFolders(content);
+                }
+            }
+        }
+
         internal static async Task<SortedDictionary<string, string>> GetRepoContentAsync(
             Repository repository, string lookingFor)
         {
             // Clear lists not to repeat if user changes selection
             ClearPrevious();
 
-            long repositoryID = repository.Id;
+            repositoryID = repository.Id;
+
             // Get everything in repo at higher level of hierarchy
-            // (in this case retrieves readme.MD, and folders)
-            IReadOnlyList<RepositoryContent> allContent = 
+            IReadOnlyList<RepositoryContent> allContent =
                 await GitHubConnection.client.Repository.Content.GetAllContents(repositoryID);
 
-            // transform into a normal list that can be cleared
-            foreach (var c in allContent)
+            foreach (RepositoryContent content in allContent)
             {
-                repoLevel.Add(c);
-            }
-
-            foreach (RepositoryContent r in repoLevel)
-            {
-                if (r.Name.EndsWith(lookingFor))
+                if (content.Name.EndsWith(lookingFor))
                 {
-                    repoFiles.Add(r.Path, r.DownloadUrl);
+                    repoFiles.Add(content.Path, content.DownloadUrl);
                 }
-                else if (r.Type == "dir")
+                else if (content.Type == "dir")
                 {
-                    repoFolders.Add(r.Path);
-                }
-            }
-
-            // Check repo's subfolders
-            foreach (string f in repoFolders)
-            {
-                // Get from specific path in repo
-                IReadOnlyList<RepositoryContent> foldersLevel =
-                    await GitHubConnection.client.Repository.Content.GetAllContents(
-                        repositoryID, f);
-
-                foreach (RepositoryContent s in foldersLevel)
-                {
-                    if (s.Name.EndsWith(lookingFor))
-                    {
-                        repoFiles.Add(s.Path, s.DownloadUrl);
-                    }
+                    await GetDynsFromFolders(content);
                 }
             }
 
             return repoFiles;
         }
-        #endregion
 
         private static void ClearPrevious()
         {
