@@ -41,13 +41,14 @@ namespace DynaHub.ViewModels
 
         private static long repositoryID;
 
-        // Recursive
         internal static async Task GetDynsFromFolders(RepositoryContent repoContent)
         {
+            // Base case
             if (repoContent.Name.EndsWith(".dyn"))
             {
                 repoFiles.Add(repoContent.Path, repoContent.DownloadUrl);
             }
+            // Recursive case
             else if (repoContent.Type == "dir")
             {
                 string folderPath = repoContent.Path;
@@ -59,7 +60,7 @@ namespace DynaHub.ViewModels
 
                 foreach (RepositoryContent content in subFolders)
                 {
-                    await GetDynsFromFolders(content);
+                    await GetDynsFromFolders(content);  // Recursion
                 }
             }
         }
