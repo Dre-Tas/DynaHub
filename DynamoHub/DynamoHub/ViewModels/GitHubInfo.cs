@@ -35,10 +35,10 @@ namespace DynaHub.ViewModels
 
         private static long repositoryID;
 
-        internal static async Task GetDynsFromFolders(RepositoryContent repoContent)
+        internal static async Task GetDynsFromFolders(RepositoryContent repoContent, string lookingFor)
         {
             // Base case
-            if (repoContent.Name.EndsWith(".dyn"))
+            if (repoContent.Name.EndsWith(lookingFor))
             {
                 repoFiles.Add(repoContent.Path, repoContent.DownloadUrl);
             }
@@ -54,7 +54,7 @@ namespace DynaHub.ViewModels
 
                 foreach (RepositoryContent content in subFolders)
                 {
-                    await GetDynsFromFolders(content);  // Recursion
+                    await GetDynsFromFolders(content, lookingFor);  // Recursion
                 }
             }
         }
@@ -79,7 +79,7 @@ namespace DynaHub.ViewModels
                 }
                 else if (content.Type == "dir")
                 {
-                    await GetDynsFromFolders(content);
+                    await GetDynsFromFolders(content, lookingFor);
                 }
             }
 
