@@ -29,12 +29,6 @@ namespace DynaHub.ViewModels
         // Initialise selection variable
         internal static Repository selectedRepo;
 
-        // contents of the repo highest level
-        internal static List<RepositoryContent> repoLevel = new List<RepositoryContent>();
-
-        // List for all folders in repo to be queried
-        internal static List<string> repoFolders = new List<string>();
-
         // Dictionary with both repo path and download_url
         internal static SortedDictionary<string, string> repoFiles =
             new SortedDictionary<string, string>();
@@ -94,8 +88,6 @@ namespace DynaHub.ViewModels
 
         private static void ClearPrevious()
         {
-            repoLevel.Clear();
-            repoFolders.Clear();
             repoFiles.Clear();
         }
     }

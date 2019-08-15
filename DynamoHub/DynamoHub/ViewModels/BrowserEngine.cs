@@ -14,54 +14,73 @@ namespace DynaHub.ViewModels
 {
     class BrowserEngine
     {
-        private static TreeView treeAno;
+        private static TreeView tree;
 
-        //private static TreeViewItem previousItem = null;
-
-        internal static void Test(IEnumerable<string> filePaths, TreeViewItem previousItem)
+        internal static List<string> CreateRoot(IEnumerable<string> filePaths)
         {
             // Group by parent folder
             IEnumerable<IGrouping<string, string>> groupedPaths =
                 filePaths.GroupBy(p => p.Split('/').First());
 
+            // Report which files are part of the root so you don't use them again
+            List<string> used = new List<string>();
 
+            // Add single files of first hierarchical level to root of tree
+            foreach (var single in groupedPaths.Where(g => g.Count() == 1))
+            {
+                string inUse = single.SingleOrDefault();
+                tree.Items.Add(inUse);
+                used.Add(inUse);
+            }
+
+            return used;
+        }
+
+        internal static void CreateTree(IEnumerable<string> filePaths, TreeViewItem previousItem)
+        {
+            // Group by parent folder (recursively)
+            IEnumerable<IGrouping<string, string>> groupedPaths =
+                filePaths.GroupBy(p => p.Split('/').First());
+
+            // Loop through grouped strings = paths in same folder
             foreach (var group in groupedPaths)
             {
-                TreeViewItem tvItem = new TreeViewItem();
-                tvItem.Header = group.Key;
+                // Create tree node
+                TreeViewItem nodeItem = new TreeViewItem();
+                // Define header as parent folder
+                nodeItem.Header = group.Key;
 
                 List<string> paths = new List<string>();
                 List<string> files = new List<string>();
 
                 foreach (var item in group)
                 {
-                    string trunc = item.Replace(group.Key + '/', "");
-                    bool cond = trunc.Contains('/');
-                    if (cond)
-                        paths.Add(trunc);
-                    else if (!cond)
-                        tvItem.Items.Add(trunc);
-                }
+                    // the name of the node is without parent folder
+                    string nodeName = item.Replace(group.Key + '/', "");
+                    // Check if it's still a folder path of just a file name
+                    bool cond = nodeName.Contains('/');
 
-                //tvItem.ItemsSource = files;
+                    // If it's a path add to paths
+                    if (cond)
+                        paths.Add(nodeName);
+                    // Otherwise it is a file name (add to files)
+                    else
+                        nodeItem.Items.Add(nodeName);
+                }
 
                 if (previousItem == null)
                 {
-                    treeAno.Items.Add(tvItem); 
+                    tree.Items.Add(nodeItem); 
                 }
                 else
                 {
-                    previousItem.Items.Add(tvItem);
+                    previousItem.Items.Add(nodeItem);
                 }
-
+                // Recursion to reproduce full path structure
                 if (paths.Count != 0)
                 {
-                    Test(paths, tvItem);
+                    CreateTree(paths, nodeItem);
                 }
-                //else
-                //{
-                //    previousItem = null;
-                //}
             }
         }
 
@@ -73,97 +92,26 @@ namespace DynaHub.ViewModels
             // If there's dynamo stuff in the repo
             if (content.Keys.Count != 0)
             {
-                // General functioning from here: https://www.dotnetperls.com/treeview-wpf
                 SortedDictionary<string, string>.KeyCollection filePaths = content.Keys;
 
-                treeAno = tree;
+                // Reference tree outside mathod so it can be used by everyone
+                BrowserEngine.tree = tree;
 
-                //TEST
-                Test(filePaths, null);
+                // Create and populate the root
+                List<string> rootFiles = CreateRoot(filePaths);
 
-
-
-                //// Group by parent folder
-                //IEnumerable<IGrouping<string, string>> groupedPaths =
-                //    filePaths.GroupBy(p => p.Split('/').First());
-
-                //foreach (IGrouping<string, string> group in groupedPaths)
-                //{
-                //    string header = group.First();
-
-                //    // Create headers
-                //    TreeViewItem tvItem = new TreeViewItem();
-                //    tvItem.Header = header;
-
-                //    tvItem.ItemsSource = group;
-
-                //    tree.Items.Add(tvItem);
-                //}
-
-                // Get unique folders to define headers of treeview
-                //HashSet<string> headers = new HashSet<string>();
+                // Get rid of files in root folder from list of paths
+                List<string> ramining = new List<string>();
                 foreach (string path in filePaths)
                 {
-
-
-
-                    //string[] subPaths = path.Split('/');
-                    //List<string> subPathsReversed = path.Split('/').Reverse().ToList();
-
-                    //if (subPaths.Length > 0)
-                    //{
-                    //    for (int i = 0; i < subPathsReversed.Count(); i++)
-                    //    {
-                    //        TreeViewItem tvItem = new TreeViewItem();
-
-                    //        if ((i + 1) < subPathsReversed.Count())
-                    //        {
-                    //            tvItem.Header = subPathsReversed[i + 1];
-
-                    //            string item = subPathsReversed[i];
-
-                    //            tvItem.Items.Add(item);
-
-                    //            tree.Items.Add(tvItem);
-                    //        }                            
-                    //    }
-
-
-                    //    //foreach (string subPath in subPaths.Reverse())
-                    //    //{
-                    //    //    TreeViewItem tvItem = new TreeViewItem();
-
-
-
-                    //    //}
-                    //}
-
-                    //headers.Add(path.Split('/').First());
+                    if (!rootFiles.Contains(path))
+                    {
+                        ramining.Add(path);
+                    }
                 }
 
-
-                //// Loop all files in folders and build treeview
-                //foreach (string h in headers)
-                //{
-                //    // Create headers
-                //    TreeViewItem tvItem = new TreeViewItem();
-                //    tvItem.Header = h;
-
-                //    // List to store all files in each folder
-                //    List<string> filesInFolder = new List<string>();
-
-                //    // Get files which path is the same of the header
-                //    foreach (var i in filePaths.Where(x => x.StartsWith(h)))
-                //    {
-                //        filesInFolder.Add(i.ToString().Split('/').Last());
-                //    }
-
-                //    // The itmes at the lower level are names of the files without the folder
-                //    tvItem.ItemsSource = filesInFolder;
-
-                //    // Add them to the treeview
-                //    tree.Items.Add(tvItem);
-                //}
+                // Create and populate the tree
+                CreateTree(ramining, null);
             }
             // If there's no dynamo
             else
