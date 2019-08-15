@@ -43,7 +43,6 @@ Load your zipped packages (they HAVE TO be zipped to work...but this makes it mu
 * Getting the packages could be tricky. You cannot delete or add folders that are used by a program, so you will have to close Dynamo to make the changes of installing/uninstalling effective. To simplify your life, DynaHub will close Dynamo for you, but then you'll have to restart it yourself. In case you're using Dynamo on Revit, you'll have to restart Revit too.
 
 ## Future features
-* Handle more complex repo structures
 * Search bar for quicker lookup of files
 * Integrate GitHub Issues (for better communication and and graph requests)
 * Forking repos
