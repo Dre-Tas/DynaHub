@@ -63,7 +63,7 @@ namespace DynaHub.ViewModels
             Repository repository, string lookingFor)
         {
             // Clear lists not to repeat if user changes selection
-            ClearPrevious();
+            repoFiles.Clear();
 
             repositoryID = repository.Id;
 
@@ -84,11 +84,6 @@ namespace DynaHub.ViewModels
             }
 
             return repoFiles;
-        }
-
-        private static void ClearPrevious()
-        {
-            repoFiles.Clear();
         }
     }
 }

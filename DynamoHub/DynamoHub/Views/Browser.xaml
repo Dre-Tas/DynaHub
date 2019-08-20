@@ -15,10 +15,18 @@
         <ComboBox 
             Grid.Row="0"
             Name="selectReposCB"
-            HorizontalAlignment="Left" VerticalAlignment="Bottom"
+            HorizontalAlignment="Left" VerticalAlignment="Top"
             Width="150" Height="25" Margin="10"
             DropDownOpened="PopulateComboAsync"
             SelectionChanged="OnSelectedAsync"/>
+
+        <Border CornerRadius="10" BorderThickness="1" BorderBrush="Gray"
+                HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                Height="23" Margin="10" Width="150">
+            <TextBox 
+                 Text="Search graph..." Background="Transparent" BorderThickness="0"
+                Margin="5,1,0,0"/>
+        </Border>
         <Image
             Grid.Row="0"
             HorizontalAlignment="Right" VerticalAlignment="Center"
