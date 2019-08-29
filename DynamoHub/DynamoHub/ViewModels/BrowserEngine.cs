@@ -101,17 +101,17 @@ namespace DynaHub.ViewModels
                 List<string> rootFiles = CreateRoot(filePaths);
 
                 // Get rid of files in root folder from list of paths
-                List<string> ramining = new List<string>();
+                List<string> remaining = new List<string>();
                 foreach (string path in filePaths)
                 {
                     if (!rootFiles.Contains(path))
                     {
-                        ramining.Add(path);
+                        remaining.Add(path);
                     }
                 }
 
                 // Create and populate the tree
-                CreateTree(ramining, null);
+                CreateTree(remaining, null);
             }
             // If there's no dynamo
             else
