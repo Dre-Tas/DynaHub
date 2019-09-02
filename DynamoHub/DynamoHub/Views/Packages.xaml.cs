@@ -92,7 +92,7 @@ namespace DynaHub.Views
             repoContent = await repoContentTask;
 
             // Populate ListBox
-            GetPackages.PopulateListBox(repoContent, packagesList);
+            //GetPackages.PopulateListBox(repoContent, packagesList);
         }
 
         private void GetPacks_Click(object sender, RoutedEventArgs e)

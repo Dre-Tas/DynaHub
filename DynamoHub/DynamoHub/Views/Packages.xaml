@@ -28,7 +28,8 @@
             Source="pack://application:,,,/DynaHub;component/Resources/DynaHubLogo.png"/>
 
         <ListBox Grid.Row="1" Name="packagesList"
-                 HorizontalAlignment="Stretch" Margin="10,10,10,40" VerticalAlignment="Stretch">
+                 HorizontalAlignment="Stretch" Margin="10,10,10,40" VerticalAlignment="Stretch"
+                 ItemsSource="{Binding repoContent}">
         </ListBox>
         <Button Content="Get All Packages" Name="GetPacks"
                 HorizontalAlignment="right" Margin="10" Grid.Row="1" VerticalAlignment="Bottom"
