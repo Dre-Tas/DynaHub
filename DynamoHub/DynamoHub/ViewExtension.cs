@@ -47,6 +47,7 @@ namespace DynaHub
             var loginMenuItem = new MenuItem { Header = "Login to GitHub" };
             var browseMenuItem = new MenuItem { Header = "Browse GitHub" };
             var packagesMenuItem = new MenuItem { Header = "Get packages" };
+            var commitMenuItem = new MenuItem { Header = "Commit & Push" };
 
             var VM = vlp.DynamoWindow.DataContext as DynamoViewModel;
 
@@ -98,12 +99,18 @@ namespace DynaHub
                 }
             };
 
+            commitMenuItem.Click += (sender, args) =>
+            {
+                MessageBox.Show("Under Construction", "WIP");
+            };
+
             // Add main menu to Dynamo
             vlp.dynamoMenu.Items.Add(extensionMenu);
             // Add sub-menus to main menu
             extensionMenu.Items.Add(loginMenuItem);
             extensionMenu.Items.Add(browseMenuItem);
             extensionMenu.Items.Add(packagesMenuItem);
+            extensionMenu.Items.Add(commitMenuItem);
         }
 
         /// <summary>
