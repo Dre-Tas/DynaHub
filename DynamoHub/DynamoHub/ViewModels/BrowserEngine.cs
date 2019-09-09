@@ -28,9 +28,12 @@ namespace DynaHub.ViewModels
             // Add single files of first hierarchical level to root of tree
             foreach (var single in groupedPaths.Where(g => g.Count() == 1))
             {
-                string inUse = single.SingleOrDefault();
-                tree.Items.Add(inUse);
-                used.Add(inUse);
+                if (!single.SingleOrDefault().Contains('/'))    // Files with a / are definitely in a folder
+                {
+                    string inUse = single.SingleOrDefault();
+                    tree.Items.Add(inUse);
+                    used.Add(inUse);
+                }
             }
 
             return used;
@@ -70,7 +73,7 @@ namespace DynaHub.ViewModels
 
                 if (previousItem == null)
                 {
-                    tree.Items.Add(nodeItem); 
+                    tree.Items.Add(nodeItem);
                 }
                 else
                 {
