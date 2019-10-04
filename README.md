@@ -49,7 +49,7 @@ Load your zipped packages (they HAVE TO be zipped to work...but this makes it mu
 * Pull requests
 
 We are also happy to hear your suggestions / feature requests!  
-Please feel free to shoot an email to atassera@ridleyco.com or log an issue on the repository.
+Please feel free to shoot an email to andrea.tassera7@gmail.com or log an issue on the repository.
 
 ## How to install
 There are two ways for installing DynaHub:  
