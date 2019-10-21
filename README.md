@@ -34,9 +34,9 @@ Load your zipped packages (they HAVE TO be zipped to work...but this makes it mu
 ![DynaHub Get Packages](/imgs/GetPackages.gif)
 
 ## Talk techy to me
-* For now, browsing is only working on a simple (*) repo structure, download the _.dyn_ file requested by the user in a _temp_ folder created within Dynamo folders and then open it in Dynamo.
+* DynaHub downloads the _.dyn_ file requested by the user in a _temp_ folder created within Dynamo folders and then open it in Dynamo.
 
-* When the user is done using the graph, the only thing to do is going to be to close Dynamo. When closing Dynamo, the _temp_ folder created by DynaHub will be deleted with all the files inside.
+* When the user is done using the graph, the only thing to do is to close Dynamo. When closing Dynamo, the _temp_ folder created by DynaHub will be deleted with all the files inside.
 
 * DynaHub uses **[OctoKit](https://github.com/octokit/octokit.net)**, a NuGet package developed by GitHub for an easier usage within the .NET framework.
 
