@@ -33,11 +33,14 @@
                     <Label 
                         Content="Password:" HorizontalAlignment="Left" VerticalAlignment="Top"
                         FontWeight="Bold" Margin="5,5,0,0"/>
-                    <PasswordBox Name="password" Password="password"
+                    <PasswordBox Name="Password" Password="password"
                         HorizontalAlignment="Stretch" Height="30"
                         VerticalAlignment="Bottom" Margin="5" FontStyle="Italic"
                         VerticalContentAlignment="Center"
                         GotFocus="pass_GotFocus" LostFocus="pass_LostFocus"/>
+                    <!--Testing-->
+                    <Button Click="Test_CredManager">Click</Button>
+                    <!--Testing-->
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Grid.Row="2">
                     <Button 

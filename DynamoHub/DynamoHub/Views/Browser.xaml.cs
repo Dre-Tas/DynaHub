@@ -59,7 +59,7 @@ namespace DynaHub.Views
 
             // Get repository object from user selection
             // It's supposed that the user has only one repo with that path (GH rule)
-            GitHubInfo.selectedRepo = localReposList.Where(r => r.FullName == selectionString).First();
+            GitHubInfo.selectedRepo = localReposList.First(r => r.FullName == selectionString);
 
             // Initialize process to get repo's content
             Task<SortedDictionary<string, string>> repoContentTask =

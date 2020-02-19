@@ -7,6 +7,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
 
+using  CredentialManagement;
+
 namespace DynaHub.Views
 {
     /// <summary>
@@ -118,7 +120,7 @@ namespace DynaHub.Views
         private async void EmailPassB_ClickAsync(object sender, RoutedEventArgs e)
         {
             GHemail = email.Text;
-            GHpassword = password.Password;
+            GHpassword = Password.Password;
 
             // Start async to get user
             Task<User> getUser = GitHubConnection.LoginAsync(GHemail, GHpassword);
@@ -157,6 +159,19 @@ namespace DynaHub.Views
 
             // And close the log in form
             Close();
+        }
+
+        // Testing
+        private void Test_CredManager(object sender, RoutedEventArgs e)
+        {
+            using (Credential c = new Credential())
+            {
+                c.Password = "testpassword";
+                c.Target = "ProvaProva";
+                c.Type = CredentialType.Generic;
+                c.PersistanceType = PersistanceType.LocalComputer;
+                c.Save();
+            }
         }
     }
 }
