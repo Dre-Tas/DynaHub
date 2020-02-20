@@ -7,8 +7,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
 
-using  CredentialManagement;
-
 namespace DynaHub.Views
 {
     /// <summary>
@@ -69,8 +67,21 @@ namespace DynaHub.Views
             }
         }
 
-        private void button_MouseUp(object sender, RoutedEventArgs e)
+        private void token_GotFocus(object sender, RoutedEventArgs e)
         {
+            string tokenFromSystem = Helpers.GetToken_CredManager();
+
+            if (tokenFromSystem == null)
+            {
+                foundCreds.Text = "You don't have a token saved in your Credential Manager";
+            }
+            else
+            {
+                // If it's not null, populate the token field
+                token.Password = tokenFromSystem;
+                foundCreds.Text = "I found the token in your Credential Manager";
+            }
+
         }
         #endregion
 
@@ -159,19 +170,6 @@ namespace DynaHub.Views
 
             // And close the log in form
             Close();
-        }
-
-        // Testing
-        private void Test_CredManager(object sender, RoutedEventArgs e)
-        {
-            using (Credential c = new Credential())
-            {
-                c.Password = "testpassword";
-                c.Target = "ProvaProva";
-                c.Type = CredentialType.Generic;
-                c.PersistanceType = PersistanceType.LocalComputer;
-                c.Save();
-            }
         }
     }
 }

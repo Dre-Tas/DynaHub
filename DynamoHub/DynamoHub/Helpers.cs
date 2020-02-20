@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using CredentialManagement;
 
 namespace DynaHub
 {
@@ -28,6 +29,19 @@ namespace DynaHub
         internal static void SuccessMessage(string message)
         {
             AutoClosingMessageBox.Show(message, "Success", 3000);
+        }
+
+        internal static string GetToken_CredManager()
+        {
+            // Create credential object targeting the DynaHub credential in Credential Manager
+            Credential credential = new Credential { Target = "DynaHub" };
+
+            if (!credential.Exists()) return null;
+
+            // Load ("open") the credential object to get the properties
+            credential.Load();
+
+            return credential.Password;
         }
     }
 
