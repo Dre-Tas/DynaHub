@@ -43,7 +43,7 @@
                     <Button 
                         Margin="10" VerticalAlignment="Center"
                         Height="20" Width="100"
-                        IsDefault="True" Click="EmailPassB_ClickAsync" Grid.ColumnSpan="2">
+                        IsDefault="True" Click="Login_ClickAsync" Grid.ColumnSpan="2">
                         Login</Button>
                     <Image
                         Source="pack://application:,,,/DynaHub;component/Resources/DynaHubLogo.png"
@@ -88,7 +88,7 @@
                     <Button 
                         Margin="10" VerticalAlignment="Center"
                         Height="20" Width="100"
-                        IsDefault="True" Click="Button_ClickAsync">
+                        IsDefault="True" Click="Login_ClickAsync">
                         Login</Button>
                     <Image
                         Source="pack://application:,,,/DynaHub;component/Resources/DynaHubLogo.png"

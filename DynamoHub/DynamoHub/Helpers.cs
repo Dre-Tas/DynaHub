@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using CredentialManagement;
+using System.Reflection;
 
 namespace DynaHub
 {
@@ -31,7 +32,7 @@ namespace DynaHub
             AutoClosingMessageBox.Show(message, "Success", 3000);
         }
 
-        internal static string GetToken_CredManager()
+        internal static string GetTokenFromCredManager()
         {
             // Create credential object targeting the DynaHub credential in Credential Manager
             Credential credential = new Credential { Target = "DynaHub" };
@@ -42,6 +43,19 @@ namespace DynaHub
             credential.Load();
 
             return credential.Password;
+        }
+
+        internal static string DecryptToken(string stringFromCredManager)
+        {
+            AssemblyName assemblyName = AssemblyName.GetAssemblyName(GlobalSettings.decryptionDll);
+
+            Assembly assembly = Assembly.Load(assemblyName);
+            Type type = assembly.GetType("DynaHub_Crypto.Crypto");
+            MethodInfo method = type.GetMethod("DecryptString");
+
+            //TODO: Get rid of pass phrase
+            return Convert.ToString(method.Invoke(null,
+                new object[] { stringFromCredManager, "justtesting" }));
         }
     }
 
