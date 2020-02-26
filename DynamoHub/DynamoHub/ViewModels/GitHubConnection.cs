@@ -51,8 +51,29 @@ namespace DynaHub.ViewModels
 
         internal static void GreetUser(User user)
         {
+            string baseGreet = "You logged in successfully";
             // Get user and greet user to check if input token is correct
-            Helpers.SuccessMessage($"You logged in successfully {user.Name}!");
+            if (user.Name != null)
+            {
+                Helpers.SuccessMessage($"{baseGreet}, {user.Name}!"); 
+            }
+            else
+            {
+                Helpers.SuccessMessage($"{baseGreet}, {user.Type}!");
+            }
+        }
+
+        internal static void ChangeLoginGreet()
+        {
+            string baseLoginGreet = "Hello";
+            if (user.Name != null && GlobalSettings.logged)
+            {
+                ViewExtension.loginMenuItem.Header = $"{baseLoginGreet}, {user.Name}!";
+            }
+            else
+            {
+                ViewExtension.loginMenuItem.Header = $"{baseLoginGreet}, {user.Type}";
+            }
         }
     }
 }

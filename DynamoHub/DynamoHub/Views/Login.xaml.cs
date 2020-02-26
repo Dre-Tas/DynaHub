@@ -1,8 +1,7 @@
 ﻿using DynaHub.ViewModels;
 using Octokit;
-using System;
 using System.Diagnostics;
-using System.Threading.Tasks;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
@@ -67,70 +66,78 @@ namespace DynaHub.Views
             }
         }
 
-        private void button_MouseUp(object sender, RoutedEventArgs e)
+        private void token_GotFocus(object sender, RoutedEventArgs e)
         {
+            // Grab string stored in Windows Credential Manager
+            string tokenfromCredManager = Helpers.GetTokenFromCredManager();
+
+            // Check if user stored token in Windows credential Manager
+            if (tokenfromCredManager == null)
+            {
+                foundCreds.Text = "You don't have a token saved in your Credential Manager";
+                return;
+            }
+
+            // If decrypting dll exists then the user encrypted the token in Credential Manager
+            if (!File.Exists(IniConfigInfo.configFilePath))
+            {
+                foundCreds.Text = "There is no config file that stores the decryption info";
+                return;
+            }
+
+            // Check if the user created a decryption dll and stored / right info in config file
+            if (File.Exists(IniConfigInfo.GetDllPath()))
+            {
+                tokenfromCredManager = Helpers.DecryptToken(tokenfromCredManager);
+            }
+            else
+            {
+                foundCreds.Text = "I can't find the decrypting method from your config file.";
+                return;
+            }
+
+            if (tokenfromCredManager != null)
+            {
+                // Populate with decrypted token
+                token.Password = tokenfromCredManager;
+                foundCreds.Text = "I found the token in your Credential Manager";
+            }
+            else
+            {
+                foundCreds.Text = "The config file is there but the info is wrong";
+            }
         }
         #endregion
 
         // Store login credentials
-        // if login with token
-        private static string tok = null;
-        // if login with GH account
+        private static string GHtok = null;
         internal static string GHemail = null;
         internal static string GHpassword = null;
 
-        private async void Button_ClickAsync(object sender, RoutedEventArgs e)
+        private async void Login_ClickAsync(object sender, RoutedEventArgs e)
         {
             // Get user inputs
-            tok = token.Password;
+            GHtok = token.Password;
+            GHemail = email.Text;
+            GHpassword = Password.Password;
 
-            // Start async to get user
-            Task<User> getUser = GitHubConnection.LoginAsync(tok);
+            User user = null;
+
+            // Check it's different from default values
+            if (GHtok != "")
+            {
+                user = await GitHubConnection.LoginAsync(GHtok);
+            }
+            else if (GHemail != "email address" && GHpassword != "password")
+            {
+                user = await GitHubConnection.LoginAsync(GHemail, GHpassword);
+            }
 
             // Pop up splash screen in the meantime
             SplashWindow verificationSplash = new SplashWindow(GlobalSettings.validationUri);
 
-            // Await for user
-            User user = await getUser;
-
             // Close splash screen
             verificationSplash.CloseSplash();
-
-            // Pop up splash screen in the meantime
-            SplashWindow verifiedSplash = new SplashWindow(GlobalSettings.validatedUri);
-
-            // Wait x seconds showing message
-            System.Threading.Thread.Sleep(2000);
-
-            // Close splash screen
-            verifiedSplash.CloseSplash();
-
-            // Greet user
-            GitHubConnection.GreetUser(user);
-
-            // If you go to this point, it was successful
-            GlobalSettings.logged = true;
-
-            // And close the log in form
-            Close();
-        }
-
-        private async void EmailPassB_ClickAsync(object sender, RoutedEventArgs e)
-        {
-            GHemail = email.Text;
-            GHpassword = password.Password;
-
-            // Start async to get user
-            Task<User> getUser = GitHubConnection.LoginAsync(GHemail, GHpassword);
-
-            // Pop up splash screen in the meantime
-            SplashWindow splash = new SplashWindow(GlobalSettings.validationUri);
-
-            // Await for user
-            User user = await getUser;
-
-            // Close splash screen
-            splash.CloseSplash();
 
             if (user != null)
             {
@@ -148,6 +155,8 @@ namespace DynaHub.Views
 
                 // If you go to this point, it was successful
                 GlobalSettings.logged = true;
+
+                GitHubConnection.ChangeLoginGreet();
             }
             else
             {

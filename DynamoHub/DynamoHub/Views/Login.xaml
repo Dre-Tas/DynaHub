@@ -33,7 +33,7 @@
                     <Label 
                         Content="Password:" HorizontalAlignment="Left" VerticalAlignment="Top"
                         FontWeight="Bold" Margin="5,5,0,0"/>
-                    <PasswordBox Name="password" Password="password"
+                    <PasswordBox Name="Password" Password="password"
                         HorizontalAlignment="Stretch" Height="30"
                         VerticalAlignment="Bottom" Margin="5" FontStyle="Italic"
                         VerticalContentAlignment="Center"
@@ -43,7 +43,7 @@
                     <Button 
                         Margin="10" VerticalAlignment="Center"
                         Height="20" Width="100"
-                        IsDefault="True" Click="EmailPassB_ClickAsync" Grid.ColumnSpan="2">
+                        IsDefault="True" Click="Login_ClickAsync" Grid.ColumnSpan="2">
                         Login</Button>
                     <Image
                         Source="pack://application:,,,/DynaHub;component/Resources/DynaHubLogo.png"
@@ -59,21 +59,23 @@
                     <RowDefinition Height="120"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-
-                <StackPanel Grid.Row="0" VerticalAlignment="Stretch" Margin="5">
+                <StackPanel Grid.Row="0" VerticalAlignment="Stretch" Margin="5" Grid.RowSpan="2">
                     <Label 
                         Content="GitHub token:" HorizontalAlignment="Left" VerticalAlignment="Top"
                         FontWeight="Bold"  Margin="5,5,0,0"/>
-                    <PasswordBox Name="token" Password="token"
+                    <PasswordBox Name="token"
                         HorizontalAlignment="Stretch" Height="30"
                         VerticalAlignment="Bottom" Margin="5" FontStyle="Italic"
                         VerticalContentAlignment="Center"
-                        GotFocus="pass_GotFocus" LostFocus="pass_LostFocus"/>
+                        GotFocus="token_GotFocus"/>
+                    <TextBlock Name="foundCreds"
+                        HorizontalAlignment="Stretch" Margin="5"
+                        VerticalAlignment="Bottom" Height="40" TextWrapping="Wrap" FontSize="10"></TextBlock>
                 </StackPanel>
-                <StackPanel Grid.Row="1" VerticalAlignment="Stretch" Margin="5">
+                <StackPanel Grid.Row="1" VerticalAlignment="Stretch" Margin="5,40,5,5">
                     <Label 
                         Content="Important:" HorizontalAlignment="Left" VerticalAlignment="Top"
-                        FontWeight="Bold"  Margin="5,5,0,0"/>
+                        FontWeight="Bold"/>
                     <TextBlock HorizontalAlignment="Stretch" Margin="5"
                         VerticalAlignment="Bottom" Height="40" TextWrapping="Wrap">
                 <Run Text="If you are unsure on what a token is or how to get one, please refer to"/>
@@ -86,7 +88,7 @@
                     <Button 
                         Margin="10" VerticalAlignment="Center"
                         Height="20" Width="100"
-                        IsDefault="True" Click="Button_ClickAsync" Grid.ColumnSpan="2">
+                        IsDefault="True" Click="Login_ClickAsync">
                         Login</Button>
                     <Image
                         Source="pack://application:,,,/DynaHub;component/Resources/DynaHubLogo.png"

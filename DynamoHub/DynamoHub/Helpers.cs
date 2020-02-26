@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using CredentialManagement;
+using System.Reflection;
 
 namespace DynaHub
 {
@@ -28,6 +31,45 @@ namespace DynaHub
         internal static void SuccessMessage(string message)
         {
             AutoClosingMessageBox.Show(message, "Success", 3000);
+        }
+
+        internal static string GetTokenFromCredManager()
+        {
+            // Create credential object targeting the DynaHub credential in Credential Manager
+            Credential credential = new Credential { Target = "DynaHub" };
+
+            if (!credential.Exists()) return null;
+
+            // Load ("open") the credential object to get the properties
+            credential.Load();
+
+            return credential.Password;
+        }
+
+
+        internal static string DecryptToken(string stringFromCredManager)
+        {
+            // This happens only after checking if ini and dll exist
+            AssemblyName assemblyName = AssemblyName.GetAssemblyName(IniConfigInfo.GetDllPath());
+            Assembly assembly = Assembly.Load(assemblyName);
+            // Get Decrypting method from dll
+            Type type = null;
+            if (IniConfigInfo.GetDllClass() != null)
+                type = assembly.GetType(IniConfigInfo.GetDllClass());
+
+            MethodInfo method = null;
+            if (IniConfigInfo.GetDllMethod() != null && type != null)
+                    method = type.GetMethod(IniConfigInfo.GetDllMethod());
+
+            if (method != null)
+            {
+                return Convert.ToString(method.Invoke(null,
+                    new object[] { stringFromCredManager }));
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 

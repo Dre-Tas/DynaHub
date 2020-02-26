@@ -32,6 +32,8 @@ namespace DynaHub
         {
         }
 
+        internal static MenuItem loginMenuItem;
+
         /// <summary>
         /// Method that is called when Dynamo has finished loading and the UI is ready to be interacted with.
         /// </summary>
@@ -42,9 +44,9 @@ namespace DynaHub
         public void Loaded(ViewLoadedParams vlp)
         {
             // let's now create a completely top-level new menu item
-            var extensionMenu = new MenuItem { Header = "DynaHub" };
+            MenuItem extensionMenu = new MenuItem { Header = "DynaHub" };
             // and now we add a new sub-menu item that says hello when clicked
-            var loginMenuItem = new MenuItem { Header = "Login to GitHub" };
+            loginMenuItem = new MenuItem { Header = "Login to GitHub" };
             var browseMenuItem = new MenuItem { Header = "Browse GitHub" };
             var packagesMenuItem = new MenuItem { Header = "Get packages" };
 

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Reflection;
@@ -28,7 +27,6 @@ namespace DynaHub
         // Navigate to Dynamo's packages folder
         internal static readonly string packFolderPath =
             Path.GetFullPath(Path.Combine(assemblyFolder, @"..\..\"));
-
         #region URIs
         internal static Uri validationUri = new Uri(
             "pack://application:,,,/DynaHub;component/Resources/verification.png",
