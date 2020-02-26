@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Reflection;
@@ -28,14 +27,6 @@ namespace DynaHub
         // Navigate to Dynamo's packages folder
         internal static readonly string packFolderPath =
             Path.GetFullPath(Path.Combine(assemblyFolder, @"..\..\"));
-
-        // Decryption .dll file location
-        // TODO: point to DynaHub's location using above assemblyFolder
-        internal static readonly string decryptionDll =
-            @"C:\Users\sydata\source\repos\DynaHub-Crypto\DynaHub-Crypto\bin\Debug\DynaHub-Crypto.dll";
-        //TEMP
-
-
         #region URIs
         internal static Uri validationUri = new Uri(
             "pack://application:,,,/DynaHub;component/Resources/verification.png",

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -45,17 +46,30 @@ namespace DynaHub
             return credential.Password;
         }
 
+
         internal static string DecryptToken(string stringFromCredManager)
         {
-            AssemblyName assemblyName = AssemblyName.GetAssemblyName(GlobalSettings.decryptionDll);
-
+            // This happens only after checking if ini and dll exist
+            AssemblyName assemblyName = AssemblyName.GetAssemblyName(IniConfigInfo.GetDllPath());
             Assembly assembly = Assembly.Load(assemblyName);
-            Type type = assembly.GetType("DynaHub_Crypto.Crypto");
-            MethodInfo method = type.GetMethod("DecryptString");
+            // Get Decrypting method from dll
+            Type type = null;
+            if (IniConfigInfo.GetDllClass() != null)
+                type = assembly.GetType(IniConfigInfo.GetDllClass());
 
-            //TODO: Get rid of pass phrase
-            return Convert.ToString(method.Invoke(null,
-                new object[] { stringFromCredManager, "justtesting" }));
+            MethodInfo method = null;
+            if (IniConfigInfo.GetDllMethod() != null && type != null)
+                    method = type.GetMethod(IniConfigInfo.GetDllMethod());
+
+            if (method != null)
+            {
+                return Convert.ToString(method.Invoke(null,
+                    new object[] { stringFromCredManager }));
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 

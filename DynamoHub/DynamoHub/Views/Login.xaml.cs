@@ -1,8 +1,7 @@
 ﻿using DynaHub.ViewModels;
 using Octokit;
-using System;
 using System.Diagnostics;
-using System.Threading.Tasks;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
@@ -69,22 +68,44 @@ namespace DynaHub.Views
 
         private void token_GotFocus(object sender, RoutedEventArgs e)
         {
-            // Check if user stored token in Windows credential Manager
-            string GHToken = Helpers.GetTokenFromCredManager();
+            // Grab string stored in Windows Credential Manager
+            string tokenfromCredManager = Helpers.GetTokenFromCredManager();
 
-            if (GHToken == null)
+            // Check if user stored token in Windows credential Manager
+            if (tokenfromCredManager == null)
             {
                 foundCreds.Text = "You don't have a token saved in your Credential Manager";
                 return;
             }
 
             // If decrypting dll exists then the user encrypted the token in Credential Manager
-            if (System.IO.File.Exists(GlobalSettings.decryptionDll))
-                GHToken = Helpers.DecryptToken(GHToken);
+            if (!File.Exists(IniConfigInfo.configFilePath))
+            {
+                foundCreds.Text = "There is no config file that stores the decryption info";
+                return;
+            }
 
-            // Populate with decrypted token
-            token.Password = GHToken;
-            foundCreds.Text = "I found the token in your Credential Manager";
+            // Check if the user created a decryption dll and stored / right info in config file
+            if (File.Exists(IniConfigInfo.GetDllPath()))
+            {
+                tokenfromCredManager = Helpers.DecryptToken(tokenfromCredManager);
+            }
+            else
+            {
+                foundCreds.Text = "I can't find the decrypting method from your config file.";
+                return;
+            }
+
+            if (tokenfromCredManager != null)
+            {
+                // Populate with decrypted token
+                token.Password = tokenfromCredManager;
+                foundCreds.Text = "I found the token in your Credential Manager";
+            }
+            else
+            {
+                foundCreds.Text = "The config file is there but the info is wrong";
+            }
         }
         #endregion
 
@@ -134,6 +155,8 @@ namespace DynaHub.Views
 
                 // If you go to this point, it was successful
                 GlobalSettings.logged = true;
+
+                GitHubConnection.ChangeLoginGreet();
             }
             else
             {
