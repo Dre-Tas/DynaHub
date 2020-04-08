@@ -157,7 +157,7 @@ namespace DynaHub.ViewModels
             // Create temp directory
             try
             {
-                tempFold = GlobalSettings.CreateTempFolder();
+                tempFold = GlobalSettings.CreateTempFolder(GitHubConnection.user.Login);
             }
             catch
             {
@@ -170,7 +170,7 @@ namespace DynaHub.ViewModels
             return tempFold + name;
         }
 
-        internal static void DownlodFileAtLocation(string uri, string location)
+        internal static void DownloadFileAtLocation(string uri, string location)
         {
             // Instantiate web client to download file
             WebClient wc = new WebClient();

@@ -90,7 +90,7 @@ namespace DynaHub.Views
                 string fName = BrowserEngine.GenerateFileName(selectedItem);
 
                 // Download file from URI at file location just defined
-                BrowserEngine.DownlodFileAtLocation(uri, fName);
+                BrowserEngine.DownloadFileAtLocation(uri, fName);
 
                 // Pass path to downloaded file to main Dynamo method
                 toOpen = fName;

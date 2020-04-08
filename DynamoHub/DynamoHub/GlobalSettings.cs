@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using DynaHub.ViewModels;
 
 namespace DynaHub
 {
@@ -27,6 +28,7 @@ namespace DynaHub
         // Navigate to Dynamo's packages folder
         internal static readonly string packFolderPath =
             Path.GetFullPath(Path.Combine(assemblyFolder, @"..\..\"));
+
         #region URIs
         internal static Uri validationUri = new Uri(
             "pack://application:,,,/DynaHub;component/Resources/verification.png",
@@ -39,14 +41,14 @@ namespace DynaHub
         internal static Uri downloadingUri = new Uri(
             "pack://application:,,,/DynaHub;component/Resources/Downloading.png",
             UriKind.RelativeOrAbsolute);
-
         #endregion
 
-        public static string CreateTempFolder()
+        public static string CreateTempFolder(string subfolder)
         {
             try
             {
-                di = Directory.CreateDirectory(tempFolderPath);
+                // Accommodate different logins
+                di = Directory.CreateDirectory(tempFolderPath + $@"{subfolder}\");
             }
             catch
             {
@@ -63,7 +65,9 @@ namespace DynaHub
             {
                 try
                 {
-                    di.Delete(true);
+                    // Delete whole temp folder including login-specific subfolders
+                    DirectoryInfo diTemp = new DirectoryInfo(tempFolderPath);
+                    diTemp.Delete(true);
                 }
                 catch
                 {

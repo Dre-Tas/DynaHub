@@ -75,5 +75,18 @@ namespace DynaHub.ViewModels
                 ViewExtension.loginMenuItem.Header = $"{baseLoginGreet}, {user.Type}";
             }
         }
+
+        internal static void Logout()
+        {
+            // Allow user to login again by changing logged value (no real login method method)
+            GlobalSettings.logged = false;
+            ViewExtension.loginMenuItem.Header = "Login to GitHub";
+
+            // Notify user
+            Helpers.SuccessMessage($"You logged out of {user.Login}");
+            
+            // Set user back to null as sanity check
+            user = null;
+        }
     }
 }
