@@ -69,12 +69,19 @@ namespace DynaHub.Views
         private void token_GotFocus(object sender, RoutedEventArgs e)
         {
             // Grab string stored in Windows Credential Manager
-            string tokenfromCredManager = Helpers.GetTokenFromCredManager();
+            string token = Helpers.GetTokenFromCredManager();
 
             // Check if user stored token in Windows credential Manager
-            if (tokenfromCredManager == null)
+            if (token == null && File.Exists(IniConfigInfo.configFilePath))
             {
-                foundCreds.Text = "You don't have a token saved in your Credential Manager";
+                // If nothing was in cred manager, try with the config file
+                token = IniConfigInfo.GetToken();
+            }
+
+            // If it's still null after checking the config file
+            if (token == null)
+            {
+                foundCreds.Text = "You don't have a token saved in your config file or Credential Manager";
                 return;
             }
 
@@ -88,7 +95,7 @@ namespace DynaHub.Views
             // Check if the user created a decryption dll and stored / right info in config file
             if (File.Exists(IniConfigInfo.GetDllPath()))
             {
-                tokenfromCredManager = Helpers.DecryptToken(tokenfromCredManager);
+                token = Helpers.DecryptToken(token);
             }
             else
             {
@@ -96,11 +103,11 @@ namespace DynaHub.Views
                 return;
             }
 
-            if (tokenfromCredManager != null)
+            if (token != null)
             {
                 // Populate with decrypted token
-                token.Password = tokenfromCredManager;
-                foundCreds.Text = "I found the token in your Credential Manager";
+                this.token.Password = token;
+                foundCreds.Text = "I found the token in your config file or Credential Manager";
             }
             else
             {

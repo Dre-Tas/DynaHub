@@ -31,6 +31,16 @@ namespace DynaHub
             }
         }
 
+        internal static string GetToken()
+        {
+            IniData config = GetConfig();
+
+            if (config == null)
+                return null;
+
+            return config["token"]["token"];
+        }
+
         private static string GetDllLocation()
         {
             IniData config = GetConfig();
