@@ -5,6 +5,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
+using ProtoCore.AST.ImperativeAST;
 
 namespace DynaHub.Views
 {
@@ -71,36 +72,38 @@ namespace DynaHub.Views
             // Grab string stored in Windows Credential Manager
             string token = Helpers.GetTokenFromCredManager();
 
-            // Check if user stored token in Windows credential Manager
-            if (token == null && File.Exists(IniConfigInfo.configFilePath))
+            // Try the config file
+            if (File.Exists(IniConfigInfo.configFilePath))
             {
-                // If nothing was in cred manager, try with the config file
-                token = IniConfigInfo.GetToken();
+                // If it exists, get the token stored there
+                string configToken = IniConfigInfo.GetToken();
+
+                // If the token in config is different from the one in cred manager, user needs to resolve conflict
+                if (token != null && token != configToken)
+                {
+                    foundCreds.Text = "There are two conflicting tokens in the config file and on Credential Manager. You may want to fix that first.";
+                    return;
+                }
+
+                token = configToken;
             }
 
             // If it's still null after checking the config file
             if (token == null)
             {
-                foundCreds.Text = "You don't have a token saved in your config file or Credential Manager";
+                foundCreds.Text = "You don't have a token saved in your config file or Credential Manager.";
                 return;
             }
 
-            // If decrypting dll exists then the user encrypted the token in Credential Manager
-            if (!File.Exists(IniConfigInfo.configFilePath))
-            {
-                foundCreds.Text = "There is no config file that stores the decryption info";
-                return;
-            }
+            // Keep track if user has config file and/or decrypting dll
+            bool configExists = File.Exists(IniConfigInfo.configFilePath);
+            bool dllExists = false;
+            if (configExists) dllExists = File.Exists(IniConfigInfo.GetDllPath());
 
             // Check if the user created a decryption dll and stored / right info in config file
-            if (File.Exists(IniConfigInfo.GetDllPath()))
+            if (configExists && dllExists)
             {
                 token = Helpers.DecryptToken(token);
-            }
-            else
-            {
-                foundCreds.Text = "I can't find the decrypting method from your config file.";
-                return;
             }
 
             if (token != null)
@@ -108,10 +111,24 @@ namespace DynaHub.Views
                 // Populate with decrypted token
                 this.token.Password = token;
                 foundCreds.Text = "I found the token in your config file or Credential Manager";
+
+                if (!configExists)
+                {
+                    foundCreds.Text += ", but there was no config file containing decryption info. You'll be fine if you didn't encrypt the token.";
+                }
+                else if (!dllExists)
+                {
+                    foundCreds.Text += ", but there was no dll file containing decryption methods. You'll be fine if you didn't encrypt the token.";
+                }
+                // Add period to sentence if none of the conditions are satisfied
+                else
+                {
+                    foundCreds.Text += ".";
+                }
             }
             else
             {
-                foundCreds.Text = "The config file is there but the info is wrong";
+                foundCreds.Text = "The config file is there but the info is wrong.";
             }
         }
         #endregion
