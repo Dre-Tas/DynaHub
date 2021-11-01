@@ -56,10 +56,15 @@ Please feel free to shoot an email to andrea.tassera7@gmail.com or log an issue 
 
 ## How to install
 There are two ways for installing DynaHub:  
-1. Build the solution and copy the folder to _%AppData%Roaming\Dynamo\Dynamo Core\2.0\packages_ to install for the Dynamo Sandbox (stand-alone version) or to _%AppData%Roaming\Dynamo\Dynamo Revit\2.0\packages_ to install for the Revit plugin;
+	
+### Option 1
+	
+> Build the solution and copy the folder to _%AppData%Roaming\Dynamo\Dynamo Core\2.0\packages_ to install for the Dynamo Sandbox (stand-alone version) or to _%AppData%Roaming\Dynamo\Dynamo Revit\2.0\packages_ to install for the Revit plugin;
 
-2. Open Dynamo (from Revit or the stand-alone Sandbox), go to the Dynamo Package Manager and look for _DynaHub_
-
-3. Download the latest version!
+### Option 2
+	
+> 1. Open Dynamo (from Revit or the stand-alone Sandbox), go to the Dynamo Package Manager and look for _DynaHub_
+>
+> 2. Download the latest version!
 
 ![DynaHub PM](/imgs/PackageManager.png)
