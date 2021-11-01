@@ -64,7 +64,7 @@ There are two ways for installing DynaHub:
 ### Option 2
 	
 > 1. Open Dynamo (from Revit or the stand-alone Sandbox), go to the Dynamo Package Manager and look for _DynaHub_
-
+>
 > 2. Download the latest version!
 
 ![DynaHub PM](/imgs/PackageManager.png)
